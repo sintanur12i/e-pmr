@@ -11,22 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('managements', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 50);
-            $table->string('password', 255);
-            $table->string('full_name', 100);
-            $table->string('email', 100);
-            $table->string('profile_photo', 255)->nullable();
-            $table->enum('role',[
-                'admin',
-                'member',
-                'candidate_member'
-            ]);
+            $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
+            $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
+            $table->string('position', 50);
             $table->boolean('is_active')->default(true);
             $table->timestamp('created_at')->useCurrent();
         });
-
     }
 
     /**
@@ -34,7 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-       
+        Schema::dropIfExists('managements');
     }
 };
