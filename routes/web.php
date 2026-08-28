@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\RegistrationController as AdminRegistrationContro
 use App\Http\Controllers\Admin\CoachController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\ManagementController;
+use App\Http\Controllers\Admin\AgendaController;
+use App\Http\Controllers\AgendaController as PublicAgendaController;
+
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -18,6 +21,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/agendas', [PublicAgendaController::class, 'index'])->name('agendas.index');
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
@@ -30,6 +34,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('coaches', CoachController::class);
         Route::resource('units', UnitController::class);
         Route::resource('managements', ManagementController::class);
+        Route::resource('agendas', AgendaController::class);
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {

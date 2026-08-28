@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Agenda extends Model
 {
     protected $fillable = [
-        'period_id', 'unit_id', 'type', 'coach_id',
+        'period_id', 'unit_id', 'type', 'target_role', 'coach_id',
         'title', 'description', 'date', 'time', 'location', 'created_by',
     ];
     public $timestamps = true;
