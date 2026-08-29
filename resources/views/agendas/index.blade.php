@@ -4,6 +4,13 @@
 <div class="container">
     <h3>Agenda Kegiatan</h3>
 
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -13,6 +20,18 @@
                 <th>Waktu</th>
                 <th>Lokasi</th>
                 <th>Unit</th>
+                <td>
+                    @if (in_array(auth()->user()->role, ['member', 'candidate_member']))
+                        <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-success">Absen</button>
+                        </form>
+
+                        <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
             </tr>
         </thead>
         <tbody>
@@ -24,9 +43,19 @@
                     <td>{{ $agenda->time }}</td>
                     <td>{{ $agenda->location }}</td>
                     <td>{{ $agenda->unit->name ?? '-' }}</td>
+                    <td>
+                        <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-success">Absen</button>
+                        </form>
+
+                        @if (in_array(auth()->user()->role, ['member', 'candidate_member']))
+                            <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
+                        @endif
+                    </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="text-center">Belum ada agenda.</td></tr>
+                <tr><td colspan="7" class="text-center">Belum ada agenda.</td></tr>
             @endforelse
         </tbody>
     </table>

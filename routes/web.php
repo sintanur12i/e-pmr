@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\ManagementController;
 use App\Http\Controllers\Admin\AgendaController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
-
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -22,6 +25,13 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/agendas', [PublicAgendaController::class, 'index'])->name('agendas.index');
+    Route::post('/agendas/{agenda}/attend', [AttendanceController::class, 'store'])->name('attendances.store');
+
+    // Route Izin — dipakai bareng oleh member DAN candidate_member, TIDAK di dalam prefix apapun
+    Route::middleware('role:member,candidate_member')->group(function () {
+        Route::get('/agendas/{agenda}/permission', [PermissionController::class, 'create'])->name('permissions.create');
+        Route::post('/agendas/{agenda}/permission', [PermissionController::class, 'store'])->name('permissions.store');
+    });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
@@ -35,6 +45,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('units', UnitController::class);
         Route::resource('managements', ManagementController::class);
         Route::resource('agendas', AgendaController::class);
+        Route::get('/agendas/{agenda}/attendances', [AdminAttendanceController::class, 'show'])->name('attendances.show');
+        Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.index');
+        Route::get('/permissions/{permission}', [AdminPermissionController::class, 'show'])->name('permissions.show');
+        Route::post('/permissions/{permission}/approve', [AdminPermissionController::class, 'approve'])->name('permissions.approve');
+        Route::post('/permissions/{permission}/reject', [AdminPermissionController::class, 'reject'])->name('permissions.reject');
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {

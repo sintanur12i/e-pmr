@@ -38,6 +38,7 @@
                     <td>{{ $agenda->unit->name ?? '-' }}</td>
                     <td>
                         <a href="{{ route('admin.agendas.edit', $agenda) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{{ route('admin.attendances.show', $agenda) }}" class="btn btn-sm btn-info">Rekap Absen</a>
                         <form action="{{ route('admin.agendas.destroy', $agenda) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus agenda ini?')">
                             @csrf
                             @method('DELETE')

@@ -18,63 +18,76 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel') }}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto"></ul>
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->full_name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
+                <ul class="navbar-nav ms-auto">
+                    @guest
+                        @if (Route::has('login'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
-                        @endguest
-                    </ul>
-                </div>
+                        @endif
+                    @else
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ Auth::user()->full_name }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                    @endguest
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <main class="py-4">
+    <div class="d-flex">
+        @auth
+        <nav class="bg-dark text-white p-3" style="width: 220px; min-height: calc(100vh - 56px);">
+            <ul class="nav flex-column">
+
+                @if (auth()->user()->role === 'admin')
+                    <li class="nav-item mb-1"><a href="{{ route('admin.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.periods.index') }}" class="nav-link text-white">Periode</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.registrations.index') }}" class="nav-link text-white">Pendaftaran</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.coaches.index') }}" class="nav-link text-white">Pelatih</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.units.index') }}" class="nav-link text-white">Unit</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.managements.index') }}" class="nav-link text-white">Kepengurusan</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.agendas.index') }}" class="nav-link text-white">Agenda</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Izin</a></li>
+                @elseif (auth()->user()->role === 'member')
+                    <li class="nav-item mb-1"><a href="{{ route('member.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
+                @elseif (auth()->user()->role === 'candidate_member')
+                    <li class="nav-item mb-1"><a href="{{ route('candidate.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
+                @endif
+
+            </ul>
+        </nav>
+        @endauth
+
+        <main class="flex-grow-1 py-4">
             @yield('content')
         </main>
     </div>
+</div>
 </body>
 </html>
