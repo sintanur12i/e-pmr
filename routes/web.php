@@ -16,6 +16,11 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\MemberUnitController;
 use App\Http\Controllers\Admin\MemberUnitController as AdminMemberUnitController;
+use App\Http\Controllers\Admin\MaterialController as AdminMaterialController;
+use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\MaterialController as PublicMaterialController;
+use App\Http\Controllers\GalleryController as PublicGalleryController;
+use App\Http\Controllers\TrainingController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -28,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/agendas', [PublicAgendaController::class, 'index'])->name('agendas.index');
     Route::post('/agendas/{agenda}/attend', [AttendanceController::class, 'store'])->name('attendances.store');
+    Route::get('/materials', [PublicMaterialController::class, 'index'])->name('materials.index');
+    Route::get('/galleries', [PublicGalleryController::class, 'index'])->name('galleries.index');
 
     // Route Izin — dipakai bareng oleh member DAN candidate_member, TIDAK di dalam prefix apapun
     Route::middleware('role:member,candidate_member')->group(function () {
@@ -57,10 +64,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/member-units', [AdminMemberUnitController::class, 'index'])->name('member-units.index');
         Route::post('/member-units/{memberUnit}/approve', [AdminMemberUnitController::class, 'approve'])->name('member-units.approve');
         Route::post('/member-units/{memberUnit}/reject', [AdminMemberUnitController::class, 'reject'])->name('member-units.reject');
+        Route::resource('materials', AdminMaterialController::class)->except(['show']);
+        Route::get('/galleries', [AdminGalleryController::class, 'index'])->name('galleries.index');
+        Route::get('/galleries/create', [AdminGalleryController::class, 'create'])->name('galleries.create');
+        Route::post('/galleries', [AdminGalleryController::class, 'store'])->name('galleries.store');
+        Route::delete('/galleries/{gallery}', [AdminGalleryController::class, 'destroy'])->name('galleries.destroy');
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
         Route::get('/dashboard', fn () => view('member.dashboard'))->name('dashboard');
+        Route::resource('trainings', TrainingController::class)->except(['show']);
     });
 
     Route::middleware('role:candidate_member')->prefix('candidate')->name('candidate.')->group(function () {
