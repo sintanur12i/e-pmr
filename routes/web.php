@@ -14,6 +14,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
+use App\Http\Controllers\MemberUnitController;
+use App\Http\Controllers\Admin\MemberUnitController as AdminMemberUnitController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -31,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:member,candidate_member')->group(function () {
         Route::get('/agendas/{agenda}/permission', [PermissionController::class, 'create'])->name('permissions.create');
         Route::post('/agendas/{agenda}/permission', [PermissionController::class, 'store'])->name('permissions.store');
+        Route::get('/my-units', [MemberUnitController::class, 'index'])->name('member-units.index');
+        Route::post('/my-units/{unit}', [MemberUnitController::class, 'store'])->name('member-units.store');
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -50,6 +54,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/permissions/{permission}', [AdminPermissionController::class, 'show'])->name('permissions.show');
         Route::post('/permissions/{permission}/approve', [AdminPermissionController::class, 'approve'])->name('permissions.approve');
         Route::post('/permissions/{permission}/reject', [AdminPermissionController::class, 'reject'])->name('permissions.reject');
+        Route::get('/member-units', [AdminMemberUnitController::class, 'index'])->name('member-units.index');
+        Route::post('/member-units/{memberUnit}/approve', [AdminMemberUnitController::class, 'approve'])->name('member-units.approve');
+        Route::post('/member-units/{memberUnit}/reject', [AdminMemberUnitController::class, 'reject'])->name('member-units.reject');
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {

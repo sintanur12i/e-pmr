@@ -20,18 +20,7 @@
                 <th>Waktu</th>
                 <th>Lokasi</th>
                 <th>Unit</th>
-                <td>
-                    @if (in_array(auth()->user()->role, ['member', 'candidate_member']))
-                        <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-success">Absen</button>
-                        </form>
-
-                        <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
-                    @else
-                        <span class="text-muted">-</span>
-                    @endif
-                </td>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -44,13 +33,15 @@
                     <td>{{ $agenda->location }}</td>
                     <td>{{ $agenda->unit->name ?? '-' }}</td>
                     <td>
-                        <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-sm btn-success">Absen</button>
-                        </form>
-
                         @if (in_array(auth()->user()->role, ['member', 'candidate_member']))
+                            <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success">Absen</button>
+                            </form>
+
                             <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
+                        @else
+                            <span class="text-muted">-</span>
                         @endif
                     </td>
                 </tr>

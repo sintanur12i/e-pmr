@@ -72,9 +72,11 @@
                     <li class="nav-item mb-1"><a href="{{ route('admin.managements.index') }}" class="nav-link text-white">Kepengurusan</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('admin.agendas.index') }}" class="nav-link text-white">Agenda</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Izin</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.member-units.index') }}" class="nav-link text-white">Pengajuan Unit</a></li>
                 @elseif (auth()->user()->role === 'member')
                     <li class="nav-item mb-1"><a href="{{ route('member.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('member-units.index') }}" class="nav-link text-white">Gabung Unit</a></li>
                 @elseif (auth()->user()->role === 'candidate_member')
                     <li class="nav-item mb-1"><a href="{{ route('candidate.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
