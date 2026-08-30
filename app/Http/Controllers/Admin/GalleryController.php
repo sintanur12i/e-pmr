@@ -9,9 +9,12 @@ use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $galleries = Gallery::with('agenda')->latest()->paginate(12);
+        $galleries = Gallery::with('agenda')
+            ->latest()
+            ->get()
+            ->groupBy(fn ($gallery) => $gallery->agenda_id ?? 'tanpa_agenda');
 
         return view('admin.galleries.index', compact('galleries'));
     }
@@ -28,7 +31,7 @@ class GalleryController extends Controller
     $validated = $request->validate([
         'agenda_id' => 'nullable|exists:agendas,id',
         'photos'    => 'required|array|min:1',
-        'photos.*'  => 'image|mimes:jpg,jpeg,png|max:2048',
+        'photos.*'  => 'image|mimes:jpg,jpeg,png|max:10240',
         'caption'   => 'required|string|max:150',
     ]);
 
@@ -46,7 +49,7 @@ class GalleryController extends Controller
     return redirect()
         ->route('admin.galleries.index')
         ->with('success', "{$count} foto berhasil ditambahkan ke galeri.");
-}
+    }
 
     public function destroy(Gallery $gallery)
     {
@@ -55,5 +58,33 @@ class GalleryController extends Controller
         return redirect()
             ->route('admin.galleries.index')
             ->with('success', 'Foto berhasil dihapus.');
+    }
+
+    public function destroyByAgenda(Agenda $agenda)
+    {
+        $galleries = Gallery::where('agenda_id', $agenda->id)->get();
+
+        foreach ($galleries as $gallery) {
+            \Storage::disk('public')->delete($gallery->photo);
+            $gallery->delete();
+        }
+
+        return redirect()
+            ->route('admin.galleries.index')
+            ->with('success', 'Semua foto pada kegiatan ini berhasil dihapus.');
+    }
+
+    public function destroyWithoutAgenda()
+    {
+        $galleries = Gallery::whereNull('agenda_id')->get();
+
+        foreach ($galleries as $gallery) {
+            \Storage::disk('public')->delete($gallery->photo);
+            $gallery->delete();
+        }
+
+        return redirect()
+            ->route('admin.galleries.index')
+            ->with('success', 'Semua foto tanpa kegiatan terkait berhasil dihapus.');
     }
 }

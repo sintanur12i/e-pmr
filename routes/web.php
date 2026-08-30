@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\MaterialController as PublicMaterialController;
 use App\Http\Controllers\GalleryController as PublicGalleryController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\ProfileController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/agendas/{agenda}/attend', [AttendanceController::class, 'store'])->name('attendances.store');
     Route::get('/materials', [PublicMaterialController::class, 'index'])->name('materials.index');
     Route::get('/galleries', [PublicGalleryController::class, 'index'])->name('galleries.index');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Route Izin — dipakai bareng oleh member DAN candidate_member, TIDAK di dalam prefix apapun
     Route::middleware('role:member,candidate_member')->group(function () {
@@ -69,6 +73,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/galleries/create', [AdminGalleryController::class, 'create'])->name('galleries.create');
         Route::post('/galleries', [AdminGalleryController::class, 'store'])->name('galleries.store');
         Route::delete('/galleries/{gallery}', [AdminGalleryController::class, 'destroy'])->name('galleries.destroy');
+        Route::delete('/galleries/agenda/{agenda}', [AdminGalleryController::class, 'destroyByAgenda'])->name('galleries.destroyByAgenda');
+        Route::delete('/galleries/no-agenda', [AdminGalleryController::class, 'destroyWithoutAgenda'])->name('galleries.destroyWithoutAgenda');
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
