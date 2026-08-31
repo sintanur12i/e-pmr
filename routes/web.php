@@ -22,6 +22,7 @@ use App\Http\Controllers\MaterialController as PublicMaterialController;
 use App\Http\Controllers\GalleryController as PublicGalleryController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -49,7 +50,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('periods', PeriodController::class);
         Route::get('/registrations', [AdminRegistrationController::class, 'index'])->name('registrations.index');
         Route::get('/registrations/{registration}', [AdminRegistrationController::class, 'show'])->name('registrations.show');
@@ -77,8 +78,11 @@ Route::middleware('auth')->group(function () {
         Route::delete('/galleries/no-agenda', [AdminGalleryController::class, 'destroyWithoutAgenda'])->name('galleries.destroyWithoutAgenda');
     });
 
-    Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
+        Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
         Route::get('/dashboard', fn () => view('member.dashboard'))->name('dashboard');
+    });
+
+        Route::middleware('role:member')->group(function () {
         Route::resource('trainings', TrainingController::class)->except(['show']);
     });
 
