@@ -68,4 +68,14 @@ class UnitController extends Controller
             ->route('admin.units.index')
             ->with('success', 'Unit berhasil dihapus.');
     }
+
+    public function members(\App\Models\Unit $unit)
+    {
+        $members = \App\Models\MemberUnit::where('unit_id', $unit->id)
+            ->whereIn('status', ['approved', 'exit_requested'])
+            ->with('member.user')
+            ->get();
+
+        return view('admin.units.members', compact('unit', 'members'));
+    }
 }

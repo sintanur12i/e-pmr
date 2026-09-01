@@ -39,4 +39,25 @@ class MemberUnitController extends Controller
 
         return back()->with('success', 'Pengajuan ditolak.');
     }
+
+    public function remove(\App\Models\MemberUnit $memberUnit)
+    {
+        $memberUnit->update(['status' => 'left']);
+
+        return back()->with('success', 'Anggota berhasil dikeluarkan dari unit.');
+    }
+
+    public function approveExit(\App\Models\MemberUnit $memberUnit)
+    {
+        $memberUnit->update(['status' => 'left']);
+
+        return back()->with('success', 'Pengajuan keluar unit disetujui.');
+    }
+
+    public function rejectExit(\App\Models\MemberUnit $memberUnit)
+    {
+        $memberUnit->update(['status' => 'approved']);
+
+        return back()->with('success', 'Pengajuan keluar unit ditolak, anggota tetap di unit.');
+    }
 }

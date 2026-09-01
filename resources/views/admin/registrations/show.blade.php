@@ -14,6 +14,20 @@
         <tr><th>Status</th><td>{{ ucfirst($registration->status) }}</td></tr>
     </table>
 
+    @if ($registration->status === 'cancel_requested')
+    <div class="alert alert-warning">Calon anggota ini mengajukan pembatalan pendaftaran.</div>
+
+    <form action="{{ route('admin.registrations.approveCancel', $registration) }}" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-success">Setujui Pembatalan</button>
+    </form>
+
+    <form action="{{ route('admin.registrations.rejectCancel', $registration) }}" method="POST" class="d-inline">
+        @csrf
+        <button type="submit" class="btn btn-warning">Tolak (Tetap Pending)</button>
+    </form>
+    @endif
+
     @if ($registration->status === 'pending')
         <a href="{{ route('admin.registrations.approveForm', $registration) }}" class="btn btn-success">Approve</a>
 

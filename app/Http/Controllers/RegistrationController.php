@@ -59,4 +59,19 @@ class RegistrationController extends Controller
             ->route('login')
             ->with('success', 'Pendaftaran berhasil dikirim. Silakan login dan tunggu konfirmasi admin.');
     }
+
+    public function cancel()
+    {
+        $registration = \Illuminate\Support\Facades\Auth::user()->registration;
+
+        if (! $registration || $registration->status !== 'pending') {
+            return back()->with('error', 'Tidak ada pendaftaran pending yang bisa dibatalkan.');
+        }
+
+        $registration->update(['status' => 'cancel_requested']);
+
+        return redirect()
+            ->route('candidate.dashboard')
+            ->with('success', 'Pengajuan pembatalan telah dikirim, menunggu persetujuan admin.');
+    }
 }

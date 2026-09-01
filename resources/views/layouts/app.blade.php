@@ -76,6 +76,7 @@
                     <li class="nav-item mb-1"><a href="{{ route('admin.materials.index') }}" class="nav-link text-white">Materi</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('admin.galleries.index') }}" class="nav-link text-white">Galeri</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link text-white">Profil Saya</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('admin.members.index') }}" class="nav-link text-white">Kelola Anggota</a></li>
                 @elseif (auth()->user()->role === 'member')
                     <li class="nav-item mb-1"><a href="{{ route('member.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
@@ -84,6 +85,7 @@
                     <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link text-white">Galeri</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('trainings.index') }}" class="nav-link text-white">Riwayat Pelatihan</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link text-white">Profil Saya</a></li>
+                    <li class="nav-item mb-1"><a href="{{ route('member.exit.create') }}" class="nav-link text-white">Ajukan Keluar</a></li>
                 @elseif (auth()->user()->role === 'candidate_member')
                     <li class="nav-item mb-1"><a href="{{ route('candidate.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
                     <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>

@@ -16,6 +16,7 @@
         <a href="{{ route('admin.registrations.index', ['status' => 'accepted']) }}" class="btn btn-sm {{ $status === 'accepted' ? 'btn-primary' : 'btn-outline-primary' }}">Diterima</a>
         <a href="{{ route('admin.registrations.index', ['status' => 'rejected']) }}" class="btn btn-sm {{ $status === 'rejected' ? 'btn-primary' : 'btn-outline-primary' }}">Ditolak</a>
         <a href="{{ route('admin.registrations.index', ['status' => 'all']) }}" class="btn btn-sm {{ $status === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">Semua</a>
+        <a href="{{ route('admin.registrations.index', ['status' => 'cancel_requested']) }}" class="btn btn-sm {{ $status === 'cancel_requested' ? 'btn-primary' : 'btn-outline-primary' }}">Pengajuan Batal</a>
     </div>
 
     <table class="table table-bordered">

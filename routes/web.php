@@ -25,6 +25,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\MemberDashboardController;
 use App\Http\Controllers\CandidateDashboardController;
+use App\Http\Controllers\Admin\MemberController as AdminMemberController;
+use App\Http\Controllers\MemberExitController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -42,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::middleware('role:candidate_member')->group(function () {
+    Route::post('/my-registration/cancel', [RegistrationController::class, 'cancel'])->name('registration.cancel');
+    });
 
     // Route Izin — dipakai bareng oleh member DAN candidate_member, TIDAK di dalam prefix apapun
     Route::middleware('role:member,candidate_member')->group(function () {
@@ -61,6 +66,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/registrations/{registration}/reject', [AdminRegistrationController::class, 'reject'])->name('registrations.reject');
         Route::resource('coaches', CoachController::class);
         Route::resource('units', UnitController::class);
+        Route::get('/units/{unit}/members', [UnitController::class, 'members'])->name('units.members');
         Route::resource('managements', ManagementController::class);
         Route::resource('agendas', AgendaController::class);
         Route::get('/agendas/{agenda}/attendances', [AdminAttendanceController::class, 'show'])->name('attendances.show');
@@ -78,13 +84,25 @@ Route::middleware('auth')->group(function () {
         Route::delete('/galleries/{gallery}', [AdminGalleryController::class, 'destroy'])->name('galleries.destroy');
         Route::delete('/galleries/agenda/{agenda}', [AdminGalleryController::class, 'destroyByAgenda'])->name('galleries.destroyByAgenda');
         Route::delete('/galleries/no-agenda', [AdminGalleryController::class, 'destroyWithoutAgenda'])->name('galleries.destroyWithoutAgenda');
+        Route::get('/members', [AdminMemberController::class, 'index'])->name('members.index');
+        Route::post('/members/{member}/remove', [AdminMemberController::class, 'remove'])->name('members.remove');
+        Route::post('/members/{member}/approve-exit', [AdminMemberController::class, 'approveExit'])->name('members.approveExit');
+        Route::post('/members/{member}/reject-exit', [AdminMemberController::class, 'rejectExit'])->name('members.rejectExit');
+        Route::post('/member-units/{memberUnit}/remove', [AdminMemberUnitController::class, 'remove'])->name('member-units.remove');
+        Route::post('/member-units/{memberUnit}/approve-exit', [AdminMemberUnitController::class, 'approveExit'])->name('member-units.approveExit');
+        Route::post('/member-units/{memberUnit}/reject-exit', [AdminMemberUnitController::class, 'rejectExit'])->name('member-units.rejectExit');
+        Route::post('/registrations/{registration}/approve-cancel', [AdminRegistrationController::class, 'approveCancel'])->name('registrations.approveCancel');
+        Route::post('/registrations/{registration}/reject-cancel', [AdminRegistrationController::class, 'rejectCancel'])->name('registrations.rejectCancel');
     });
 
-        Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
+    Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
         Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
+        Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
+        Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
     });
 
-        Route::middleware('role:member')->group(function () {
+    Route::middleware('role:member')->group(function () {
         Route::resource('trainings', TrainingController::class)->except(['show']);
     });
 

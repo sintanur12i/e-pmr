@@ -53,4 +53,22 @@ class MemberUnitController extends Controller
 
         return back()->with('success', 'Pengajuan gabung unit berhasil dikirim, menunggu persetujuan admin.');
     }
+
+    public function requestExit(\App\Models\Unit $unit)
+    {
+        $member = \Illuminate\Support\Facades\Auth::user()->member;
+
+        $memberUnit = \App\Models\MemberUnit::where('member_id', $member->id)
+            ->where('unit_id', $unit->id)
+            ->where('status', 'approved')
+            ->first();
+
+        if (! $memberUnit) {
+            return back()->with('error', 'Anda tidak tergabung di unit ini.');
+        }
+
+        $memberUnit->update(['status' => 'exit_requested']);
+
+        return back()->with('success', 'Pengajuan keluar dari unit telah dikirim, menunggu persetujuan admin.');
+    }
 }

@@ -28,6 +28,7 @@
                     <td>{{ $unit->coach->name }}</td>
                     <td>
                         <a href="{{ route('admin.units.edit', $unit) }}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{{ route('admin.units.members', $unit) }}" class="btn btn-sm btn-info">Lihat Anggota</a>
                         <form action="{{ route('admin.units.destroy', $unit) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus unit ini?')">
                             @csrf
                             @method('DELETE')

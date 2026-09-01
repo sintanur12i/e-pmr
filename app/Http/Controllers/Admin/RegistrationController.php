@@ -84,4 +84,26 @@ class RegistrationController extends Controller
             ->route('admin.registrations.index')
             ->with('success', 'Pendaftaran ditolak.');
     }
+
+    public function approveCancel(\App\Models\Registration $registration)
+{
+    if ($registration->status !== 'cancel_requested') {
+        return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
+    }
+
+    $registration->update(['status' => 'rejected']);
+
+    return back()->with('success', 'Pembatalan pendaftaran disetujui.');
+    }
+
+    public function rejectCancel(\App\Models\Registration $registration)
+    {
+        if ($registration->status !== 'cancel_requested') {
+            return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
+        }
+
+        $registration->update(['status' => 'pending']);
+
+        return back()->with('success', 'Pengajuan pembatalan ditolak, pendaftaran tetap pending.');
+    }
 }
