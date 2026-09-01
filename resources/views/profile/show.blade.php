@@ -25,5 +25,23 @@
             </table>
         </div>
     </div>
+
+    @if (auth()->user()->role === 'member')
+        <div class="card mt-3" style="max-width: 500px;">
+            <div class="card-header">Riwayat Jabatan</div>
+            <ul class="list-group list-group-flush">
+                @forelse ($managements as $management)
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ $management->position }} ({{ $management->period->name }})</span>
+                        <span class="badge {{ $management->is_active ? 'bg-success' : 'bg-secondary' }}">
+                            {{ $management->is_active ? 'Aktif' : 'Selesai' }}
+                        </span>
+                    </li>
+                @empty
+                    <li class="list-group-item text-muted">Belum pernah menjabat.</li>
+                @endforelse
+            </ul>
+        </div>
+    @endif
 </div>
 @endsection

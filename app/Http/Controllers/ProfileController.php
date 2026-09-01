@@ -10,12 +10,16 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        return view('profile.show');
-    }
+        $managements = [];
 
-    public function edit()
-    {
-        return view('profile.edit');
+        if (Auth::user()->member) {
+            $managements = \App\Models\Management::where('member_id', Auth::user()->member->id)
+                ->with('period')
+                ->orderByDesc('period_id')
+                ->get();
+        }
+
+        return view('profile.show', compact('managements'));
     }
 
     public function update(Request $request)

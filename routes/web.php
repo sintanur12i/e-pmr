@@ -23,6 +23,8 @@ use App\Http\Controllers\GalleryController as PublicGalleryController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\MemberDashboardController;
+use App\Http\Controllers\CandidateDashboardController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -79,7 +81,7 @@ Route::middleware('auth')->group(function () {
     });
 
         Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
-        Route::get('/dashboard', fn () => view('member.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
     });
 
         Route::middleware('role:member')->group(function () {
@@ -87,6 +89,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:candidate_member')->prefix('candidate')->name('candidate.')->group(function () {
-        Route::get('/dashboard', fn () => view('candidate.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [CandidateDashboardController::class, 'index'])->name('dashboard');
     });
 });
