@@ -97,13 +97,13 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
         Route::get('/dashboard', [MemberDashboardController::class, 'index'])->name('dashboard');
-        Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
-        Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
-        Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
     });
 
     Route::middleware('role:member')->group(function () {
         Route::resource('trainings', TrainingController::class)->except(['show']);
+        Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
+        Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
+        Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
     });
 
     Route::middleware('role:candidate_member')->prefix('candidate')->name('candidate.')->group(function () {

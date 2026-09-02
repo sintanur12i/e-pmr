@@ -22,6 +22,11 @@ class ProfileController extends Controller
         return view('profile.show', compact('managements'));
     }
 
+    public function edit()
+    {
+        return view('profile.edit');
+    }
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -29,7 +34,7 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'full_name'     => 'required|string|max:100',
             'email'         => 'required|email|max:100|unique:users,email,' . $user->id,
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'password'      => 'nullable|string|min:6|confirmed',
         ]);
 

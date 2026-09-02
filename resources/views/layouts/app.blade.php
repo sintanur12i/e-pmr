@@ -21,7 +21,11 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
+                <span class="pmr-logo">+</span>
+                <span>
+                    E-PMR
+                    <small>SMK N 2 Purbalingga</small>
+                </span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
@@ -60,42 +64,51 @@
 
     <div class="d-flex">
         @auth
-        <nav class="bg-dark text-white p-3" style="width: 220px; min-height: calc(100vh - 56px);">
-            <ul class="nav flex-column">
+        <nav class="bg-dark text-white p-3 sidebar-pmr" style="width: 220px; min-height: calc(100vh - 56px);">
 
-                @if (auth()->user()->role === 'admin')
-                    <li class="nav-item mb-1"><a href="{{ route('admin.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.periods.index') }}" class="nav-link text-white">Periode</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.registrations.index') }}" class="nav-link text-white">Pendaftaran</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.coaches.index') }}" class="nav-link text-white">Pelatih</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.units.index') }}" class="nav-link text-white">Unit</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.managements.index') }}" class="nav-link text-white">Kepengurusan</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.agendas.index') }}" class="nav-link text-white">Agenda</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.permissions.index') }}" class="nav-link text-white">Izin</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.member-units.index') }}" class="nav-link text-white">Pengajuan Unit</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.materials.index') }}" class="nav-link text-white">Materi</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.galleries.index') }}" class="nav-link text-white">Galeri</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link text-white">Profil Saya</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('admin.members.index') }}" class="nav-link text-white">Kelola Anggota</a></li>
-                @elseif (auth()->user()->role === 'member')
-                    <li class="nav-item mb-1"><a href="{{ route('member.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('member-units.index') }}" class="nav-link text-white">Gabung Unit</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('materials.index') }}" class="nav-link text-white">Materi</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link text-white">Galeri</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('trainings.index') }}" class="nav-link text-white">Riwayat Pelatihan</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link text-white">Profil Saya</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('member.exit.create') }}" class="nav-link text-white">Ajukan Keluar</a></li>
-                @elseif (auth()->user()->role === 'candidate_member')
-                    <li class="nav-item mb-1"><a href="{{ route('candidate.dashboard') }}" class="nav-link text-white">Dashboard</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link text-white">Agenda</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('materials.index') }}" class="nav-link text-white">Materi</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link text-white">Galeri</a></li>
-                    <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link text-white">Profil Saya</a></li>
-                @endif
+    <div class="sidebar-user">
+        <div class="sidebar-user-avatar">{{ strtoupper(substr(auth()->user()->full_name, 0, 1)) }}</div>
+        <div>
+            <div class="sidebar-user-name">{{ auth()->user()->full_name }}</div>
+            <div class="sidebar-user-role">{{ str_replace('_', ' ', auth()->user()->role) }}</div>
+        </div>
+    </div>
 
-            </ul>
-        </nav>
+    <ul class="nav flex-column">
+
+        @if (auth()->user()->role === 'admin')
+            <li class="nav-item mb-1"><a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><span class="nav-icon">🏠</span> Dashboard</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.periods.index') }}" class="nav-link {{ request()->routeIs('admin.periods.*') ? 'active' : '' }}"><span class="nav-icon">🗓️</span> Periode</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.registrations.index') }}" class="nav-link {{ request()->routeIs('admin.registrations.*') ? 'active' : '' }}"><span class="nav-icon">📝</span> Pendaftaran</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.coaches.index') }}" class="nav-link {{ request()->routeIs('admin.coaches.*') ? 'active' : '' }}"><span class="nav-icon">🧑‍🏫</span> Pelatih</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.units.index') }}" class="nav-link {{ request()->routeIs('admin.units.*') ? 'active' : '' }}"><span class="nav-icon">🧩</span> Unit</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.managements.index') }}" class="nav-link {{ request()->routeIs('admin.managements.*') ? 'active' : '' }}"><span class="nav-icon">👥</span> Kepengurusan</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.agendas.index') }}" class="nav-link {{ request()->routeIs('admin.agendas.*') ? 'active' : '' }}"><span class="nav-icon">📌</span> Agenda</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.permissions.index') }}" class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}"><span class="nav-icon">📄</span> Izin</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.member-units.index') }}" class="nav-link {{ request()->routeIs('admin.member-units.*') ? 'active' : '' }}"><span class="nav-icon">🔁</span> Pengajuan Unit</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.materials.index') }}" class="nav-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}"><span class="nav-icon">📚</span> Materi</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.galleries.index') }}" class="nav-link {{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}"><span class="nav-icon">🖼️</span> Galeri</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"><span class="nav-icon">👤</span> Profil Saya</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.members.index') }}" class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}"><span class="nav-icon">🗂️</span> Kelola Anggota</a></li>
+        @elseif (auth()->user()->role === 'member')
+            <li class="nav-item mb-1"><a href="{{ route('member.dashboard') }}" class="nav-link {{ request()->routeIs('member.dashboard') ? 'active' : '' }}"><span class="nav-icon">🏠</span> Dashboard</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link {{ request()->routeIs('agendas.*') ? 'active' : '' }}"><span class="nav-icon">📌</span> Agenda</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('member-units.index') }}" class="nav-link {{ request()->routeIs('member-units.*') ? 'active' : '' }}"><span class="nav-icon">🤝</span> Gabung Unit</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('materials.index') }}" class="nav-link {{ request()->routeIs('materials.*') ? 'active' : '' }}"><span class="nav-icon">📚</span> Materi</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link {{ request()->routeIs('galleries.*') ? 'active' : '' }}"><span class="nav-icon">🖼️</span> Galeri</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('trainings.index') }}" class="nav-link {{ request()->routeIs('trainings.*') ? 'active' : '' }}"><span class="nav-icon">🎓</span> Riwayat Pelatihan</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"><span class="nav-icon">👤</span> Profil Saya</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('member.exit.create') }}" class="nav-link {{ request()->routeIs('member.exit.*') ? 'active' : '' }}"><span class="nav-icon">🚪</span> Ajukan Keluar</a></li>
+        @elseif (auth()->user()->role === 'candidate_member')
+            <li class="nav-item mb-1"><a href="{{ route('candidate.dashboard') }}" class="nav-link {{ request()->routeIs('candidate.dashboard') ? 'active' : '' }}"><span class="nav-icon">🏠</span> Dashboard</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('agendas.index') }}" class="nav-link {{ request()->routeIs('agendas.*') ? 'active' : '' }}"><span class="nav-icon">📌</span> Agenda</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('materials.index') }}" class="nav-link {{ request()->routeIs('materials.*') ? 'active' : '' }}"><span class="nav-icon">📚</span> Materi</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link {{ request()->routeIs('galleries.*') ? 'active' : '' }}"><span class="nav-icon">🖼️</span> Galeri</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"><span class="nav-icon">👤</span> Profil Saya</a></li>
+        @endif
+
+    </ul>
+</nav>
         @endauth
 
         <main class="flex-grow-1 py-4">
