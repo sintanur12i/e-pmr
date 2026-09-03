@@ -20,13 +20,13 @@
     <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url('/') }}">
+            <span class="navbar-brand" href="{{ url('/') }}">
                 <span class="pmr-logo">+</span>
                 <span>
                     E-PMR
                     <small>SMK N 2 Purbalingga</small>
                 </span>
-            </a>
+            </span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -67,7 +67,11 @@
         <nav class="bg-dark text-white p-3 sidebar-pmr" style="width: 220px; min-height: calc(100vh - 56px);">
 
     <div class="sidebar-user">
-        <div class="sidebar-user-avatar">{{ strtoupper(substr(auth()->user()->full_name, 0, 1)) }}</div>
+        @if (auth()->user()->profile_photo)
+            <img src="{{ Storage::url(auth()->user()->profile_photo) }}" class="sidebar-user-avatar-img" alt="Foto Profil">
+        @else
+            <div class="sidebar-user-avatar">{{ strtoupper(substr(auth()->user()->full_name, 0, 1)) }}</div>
+        @endif
         <div>
             <div class="sidebar-user-name">{{ auth()->user()->full_name }}</div>
             <div class="sidebar-user-role">{{ str_replace('_', ' ', auth()->user()->role) }}</div>

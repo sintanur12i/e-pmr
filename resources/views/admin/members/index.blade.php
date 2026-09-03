@@ -18,6 +18,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th style="width: 60px;"></th>
                 <th>Nama</th>
                 <th>NIS</th>
                 <th>Kelas</th>
@@ -29,6 +30,13 @@
         <tbody>
             @forelse ($members as $member)
                 <tr>
+                    <td>
+                        @if ($member->user->profile_photo)
+                            <img src="{{ Storage::url($member->user->profile_photo) }}" class="table-avatar" alt="Foto">
+                        @else
+                            <div class="table-avatar-fallback">{{ strtoupper(substr($member->user->full_name, 0, 1)) }}</div>
+                        @endif
+                    </td>
                     <td>{{ $member->user->full_name }}</td>
                     <td>{{ $member->student_id }}</td>
                     <td>{{ $member->class }}</td>

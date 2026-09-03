@@ -116,3 +116,95 @@
     text-align: center;
     flex-shrink: 0;
 }
+
+/* ===== Card ===== */
+.card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid var(--bs-primary-bg-subtle);
+    font-weight: 600;
+    padding: 0.85rem 1.1rem;
+}
+
+/* ===== Tabel ===== */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #212529;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border: none;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: var(--bs-primary-bg-subtle);
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+/* ===== Badge lebih tebal & rounded ===== */
+.badge {
+    padding: 0.4em 0.75em;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* ===== Judul halaman ===== */
+h3 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1.2rem;
+}
+
+/* ===== Tombol lebih halus ===== */
+.btn {
+    border-radius: 7px;
+    font-weight: 500;
+}
+
+.btn-sm {
+    border-radius: 6px;
+}
+
+.sidebar-user-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.table-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.table-avatar-fallback {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--bs-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
