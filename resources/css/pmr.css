@@ -208,3 +208,83 @@ h3 {
     font-weight: 700;
     font-size: 0.9rem;
 }
+
+/* ===== Stat Card (Dashboard) ===== */
+.stat-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-icon-primary { background-color: var(--bs-primary-bg-subtle); color: var(--bs-primary); }
+.stat-icon-success { background-color: #e6f4ea; color: #198754; }
+.stat-icon-warning { background-color: #fff8e5; color: #997404; }
+.stat-icon-danger  { background-color: #fdecea; color: #dc3545; }
+.stat-icon-info    { background-color: #e7f3fe; color: #0d6efd; }
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #212529;
+}
+
+.stat-label {
+    font-size: 0.82rem;
+    color: #6c757d;
+    margin-top: 0.2rem;
+}
+
+/* ===== Stat Card gaya mockup  ===== */
+.stat-card-bar {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-left: 5px solid var(--bs-primary);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    height: 100%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card-bar.border-success { border-left-color: #198754; }
+.stat-card-bar.border-warning { border-left-color: #ffc107; }
+.stat-card-bar.border-info    { border-left-color: #0dcaf0; }
+.stat-card-bar.border-danger  { border-left-color: #dc3545; }
+
+.stat-card-bar .stat-title {
+    font-size: 0.78rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.35rem;
+}
+
+.stat-card-bar .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #212529;
+    line-height: 1.1;
+}
+
+.stat-card-bar .stat-sub {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-top: 0.2rem;
+}

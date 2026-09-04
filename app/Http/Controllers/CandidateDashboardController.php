@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 
 class CandidateDashboardController extends Controller
@@ -10,22 +11,31 @@ class CandidateDashboardController extends Controller
     public function index()
     {
         $registration = Auth::user()->registration;
+        $attendanceRate = 0;
 
-        // "Mengikuti diklat" dianggap true kalau calon anggota ini sudah pernah absen di agenda tipe training
-        $hasAttendedTraining = false;
         if ($registration) {
-            $hasAttendedTraining = \App\Models\Attendance::where('registration_id', $registration->id)
-                ->whereHas('agenda', fn ($q) => $q->where('type', 'training'))
-                ->exists();
+            $totalAgendas = Agenda::where('period_id', $registration->period_id)
+                ->whereIn('target_role', ['all', 'candidate_member'])
+                ->count();
+
+            if ($totalAgendas > 0) {
+                $attended = Attendance::where('registration_id', $registration->id)
+                    ->whereHas('agenda', function ($q) use ($registration) {
+                        $q->where('period_id', $registration->period_id)->whereIn('target_role', ['all', 'candidate_member']);
+                    })->count();
+
+                $attendanceRate = round(($attended / $totalAgendas) * 100, 1);
+            }
         }
 
-        $upcomingTraining = Agenda::where('type', 'training')
+        $upcomingAgendas = Agenda::with('unit')
             ->whereIn('target_role', ['all', 'candidate_member'])
             ->where('date', '>=', now()->toDateString())
             ->orderBy('date')
             ->orderBy('time')
-            ->first();
+            ->take(5)
+            ->get();
 
-        return view('candidate.dashboard', compact('registration', 'hasAttendedTraining', 'upcomingTraining'));
+        return view('candidate.dashboard', compact('registration', 'attendanceRate', 'upcomingAgendas'));
     }
 }

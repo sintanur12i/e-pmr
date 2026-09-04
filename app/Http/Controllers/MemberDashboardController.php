@@ -33,12 +33,25 @@ class MemberDashboardController extends Controller
             }
         }
 
-        $myPermissions = Permission::where('member_id', $member->id)
-            ->with('agenda')
-            ->latest()
+        $myPermissionsCount = Permission::where('member_id', $member->id)->count();
+        $myPermissionsPending = Permission::where('member_id', $member->id)->where('status', 'pending')->count();
+
+        $myTrainingsCount = \App\Models\Training::where('member_id', $member->id)->count();
+
+        $relatedAgendas = Agenda::with(['period', 'unit'])
+            ->when($activePeriod, fn ($q) => $q->where('period_id', $activePeriod->id))
+            ->whereIn('target_role', ['all', 'member'])
+            ->orderBy('date')
             ->take(5)
             ->get();
 
-        return view('member.dashboard', compact('attendanceRate', 'totalAgendas', 'myPermissions'));
+        return view('member.dashboard', compact(
+            'attendanceRate',
+            'totalAgendas',
+            'myPermissionsCount',
+            'myPermissionsPending',
+            'myTrainingsCount',
+            'relatedAgendas'
+        ));
     }
 }

@@ -20,8 +20,10 @@ return new class extends Migration
             $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
             $table->enum('status', [
                 'pending',
+                'training',
                 'accepted',
-                'rejected'
+                'rejected',
+                'cancel_requested'
             ])->default('pending');
             $table->date('registration_date');
             $table->timestamp('created_at')->useCurrent();

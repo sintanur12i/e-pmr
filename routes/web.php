@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/registrations/{registration}/approveForm', [AdminRegistrationController::class, 'approveForm'])->name('registrations.approveForm');
         Route::post('/registrations/{registration}/approve', [AdminRegistrationController::class, 'approve'])->name('registrations.approve');
         Route::post('/registrations/{registration}/reject', [AdminRegistrationController::class, 'reject'])->name('registrations.reject');
+        Route::post('/registrations/{registration}/start-training', [AdminRegistrationController::class, 'startTraining'])->name('registrations.startTraining');
         Route::resource('coaches', CoachController::class);
         Route::resource('units', UnitController::class);
         Route::get('/units/{unit}/members', [UnitController::class, 'members'])->name('units.members');

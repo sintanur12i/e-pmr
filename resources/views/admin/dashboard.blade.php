@@ -35,25 +35,56 @@
     </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2>{{ $pendingRegistrations + $pendingPermissions + $pendingMemberUnits }}</h2>
-                <p class="text-muted mb-0">Total Menunggu Persetujuan</p>
+<div class="row mb-4 g-3">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-primary">📊</div>
+            <div>
+                <div class="stat-value">{{ $overallAttendanceRate }}%</div>
+                <div class="stat-label">Kehadiran Keseluruhan</div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2>{{ count($membersBelowStandard) }}</h2>
-                <p class="text-muted mb-0">Di Bawah Standar Kehadiran (Member + Calon Anggota)</p>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-info">🧑‍🤝‍🧑</div>
+            <div>
+                <div class="stat-value">{{ $memberAttendanceRate }}%</div>
+                <div class="stat-label">Kehadiran Member ({{ $totalMembers }} orang)</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-info">🙋</div>
+            <div>
+                <div class="stat-value">{{ $candidateAttendanceRate }}%</div>
+                <div class="stat-label">Kehadiran Calon Anggota ({{ $totalCandidates }} orang)</div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row mb-4 g-3">
+    <div class="col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-warning">⏳</div>
+            <div>
+                <div class="stat-value">{{ $pendingRegistrations + $pendingPermissions + $pendingMemberUnits }}</div>
+                <div class="stat-label">Total Menunggu Persetujuan</div>
+            </div>
+        </div>
     </div>
+    <div class="col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-danger">⚠️</div>
+            <div>
+                <div class="stat-value">{{ count($membersBelowStandard) }}</div>
+                <div class="stat-label">Di Bawah Standar Kehadiran</div>
+            </div>
+        </div>
+    </div>
+</div>
 
     @if (count($membersBelowStandard) > 0)
     <div class="card mb-4">

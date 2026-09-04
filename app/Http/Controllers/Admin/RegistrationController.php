@@ -106,4 +106,15 @@ class RegistrationController extends Controller
 
         return back()->with('success', 'Pengajuan pembatalan ditolak, pendaftaran tetap pending.');
     }
+
+    public function startTraining(\App\Models\Registration $registration)
+    {
+        if ($registration->status !== 'pending') {
+            return back()->with('error', 'Pendaftaran ini sudah diproses sebelumnya.');
+        }
+
+        $registration->update(['status' => 'training']);
+
+        return back()->with('success', 'Status diubah menjadi Mengikuti Diklat.');
+    }
 }

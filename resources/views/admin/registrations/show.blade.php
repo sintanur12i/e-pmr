@@ -28,10 +28,24 @@
     </form>
     @endif
 
-    @if ($registration->status === 'pending')
+        @if ($registration->status === 'pending')
         <a href="{{ route('admin.registrations.approveForm', $registration) }}" class="btn btn-success">Approve</a>
 
-        <form action="{{ route('admin.registrations.reject', $registration) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin tolak pendaftaran ini?')">
+        <form action="{{ route('admin.registrations.reject', $registration) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-danger">Reject</button>
+        </form>
+
+        <form action="{{ route('admin.registrations.startTraining', $registration) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="btn btn-info">Mulai Diklat</button>
+        </form>
+    @elseif ($registration->status === 'training')
+        <div class="alert alert-info">Calon anggota ini sedang mengikuti diklat.</div>
+
+        <a href="{{ route('admin.registrations.approveForm', $registration) }}" class="btn btn-success">Approve</a>
+
+        <form action="{{ route('admin.registrations.reject', $registration) }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-danger">Reject</button>
         </form>
