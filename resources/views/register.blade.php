@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Formulir Pendaftaran Anggota PMR SMK N 2 Purbalingga</div>
+                <div class="card-header">Formulir Pendaftaran Calon Anggota PMR SMK N 2 Purbalingga</div>
                 <div class="card-body">
 
                     @if (! $activePeriod)

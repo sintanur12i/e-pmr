@@ -65,6 +65,14 @@
                             </div>
                         </div>
                     </form>
+
+                    @if (Route::has('register.create'))
+                        <hr>
+                        <div class="text-center">
+                            <span class="text-muted">Belum punya akun?</span>
+                            <a href="{{ route('register.create') }}">Daftar</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

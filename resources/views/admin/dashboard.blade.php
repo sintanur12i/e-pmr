@@ -8,7 +8,7 @@
         <div class="alert alert-warning">Belum ada periode aktif — statistik di bawah tidak dapat dihitung.</div>
     @endif
 
-    <div class="row mb-4">
+    {{-- <div class="row mb-4">
     <div class="col-md-4">
         <div class="card text-center">
             <div class="card-body">
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <div class="row mb-4 g-3">
     <div class="col-md-4">
