@@ -22,4 +22,5 @@ class Member extends Model
     public function trainings() { return $this->hasMany(Training::class, 'member_id'); }
     public function attendances() { return $this->hasMany(Attendance::class, 'member_id'); }
     public function permissions() { return $this->hasMany(Permission::class, 'member_id'); }
+    public function certificates() { return $this->hasMany(Certificate::class, 'member_id'); }
 }

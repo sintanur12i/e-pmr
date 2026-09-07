@@ -27,6 +27,8 @@ use App\Http\Controllers\MemberDashboardController;
 use App\Http\Controllers\CandidateDashboardController;
 use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\MemberExitController;
+use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
+use App\Http\Controllers\CertificateController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -94,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/member-units/{memberUnit}/reject-exit', [AdminMemberUnitController::class, 'rejectExit'])->name('member-units.rejectExit');
         Route::post('/registrations/{registration}/approve-cancel', [AdminRegistrationController::class, 'approveCancel'])->name('registrations.approveCancel');
         Route::post('/registrations/{registration}/reject-cancel', [AdminRegistrationController::class, 'rejectCancel'])->name('registrations.rejectCancel');
+        Route::resource('certificates', AdminCertificateController::class)->except(['show', 'edit', 'update']);
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {
@@ -105,6 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
         Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
         Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
+        Route::get('/my-certificates', [CertificateController::class, 'index'])->name('certificates.index');
     });
 
     Route::middleware('role:candidate_member')->prefix('candidate')->name('candidate.')->group(function () {
