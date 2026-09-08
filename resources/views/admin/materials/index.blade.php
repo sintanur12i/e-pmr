@@ -11,39 +11,32 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Judul</th>
-                <th>Kategori</th>
-                <th>Diupload Oleh</th>
-                <th>Tanggal</th>
-                <th>File</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($materials as $material)
-                <tr>
-                    <td>{{ $material->title }}</td>
-                    <td>{{ $material->category }}</td>
-                    <td>{{ $material->uploader->name }}</td>
-                    <td>{{ $material->date }}</td>
-                    <td><a href="{{ Storage::url($material->file) }}" target="_blank">Lihat File</a></td>
-                    <td>
-                        <a href="{{ route('admin.materials.edit', $material) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('admin.materials.destroy', $material) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus materi ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="6" class="text-center">Belum ada materi.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+    <div class="row">
+        @forelse ($materials as $material)
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title mb-1">{{ $material->title }}</h6>
+                        <p class="card-text small text-muted mb-2">{{ $material->date }}</p>
+
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                            <a href="{{ Storage::url($material->file) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File</a>
+                            <div>
+                                <a href="{{ route('admin.materials.edit', $material) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('admin.materials.destroy', $material) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus materi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <p class="text-center">Belum ada materi.</p>
+        @endforelse
+    </div>
 
     {{ $materials->links() }}
 </div>

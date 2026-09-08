@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
-            $table->text('description');
             $table->string('file', 255);
-            $table->string('category', 50);
-            $table->foreignId('uploaded_by')->constrained('coaches')->onDelete('cascade');
             $table->date('date');
             $table->timestamp('created_at')->useCurrent();
         });

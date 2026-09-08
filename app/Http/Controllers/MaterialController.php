@@ -8,7 +8,7 @@ class MaterialController extends Controller
 {
     public function index()
     {
-        $materials = Material::with('uploader')->latest()->paginate(10);
+        $materials = Material::latest()->paginate(10);
 
         return view('materials.index', compact('materials'));
     }

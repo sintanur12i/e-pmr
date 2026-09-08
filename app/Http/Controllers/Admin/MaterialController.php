@@ -27,10 +27,7 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'title'       => 'required|string|max:100',
-            'description' => 'required|string',
             'file'        => 'required|file|mimes:pdf,doc,docx,ppt,pptx|max:5120',
-            'category'    => 'required|string|max:50',
-            'uploaded_by' => 'required|exists:coaches,id',
             'date'        => 'required|date',
         ]);
 
@@ -54,10 +51,7 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'title'       => 'required|string|max:100',
-            'description' => 'required|string',
             'file'        => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx|max:5120',
-            'category'    => 'required|string|max:50',
-            'uploaded_by' => 'required|exists:coaches,id',
             'date'        => 'required|date',
         ]);
 

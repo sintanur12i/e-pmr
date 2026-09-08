@@ -6,13 +6,12 @@
 
     <div class="row">
         @forelse ($materials as $material)
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $material->title }}</h5>
-                        <p class="card-text small text-muted">{{ $material->category }} • {{ $material->uploader->name }}</p>
-                        <p class="card-text">{{ Str::limit($material->description, 80) }}</p>
-                        <a href="{{ Storage::url($material->file) }}" target="_blank" class="btn btn-sm btn-primary">Unduh / Lihat</a>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title mb-1">{{ $material->title }}</h6>
+                        <p class="card-text small text-muted mb-2">{{ $material->date }}</p>
+                        <a href="{{ Storage::url($material->file) }}" target="_blank" class="btn btn-sm btn-primary mt-auto">Unduh / Lihat</a>
                     </div>
                 </div>
             </div>

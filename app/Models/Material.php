@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-    protected $fillable = ['title', 'description', 'file', 'category', 'uploaded_by', 'date'];
+    protected $fillable = ['title', 'file', 'date'];
     public $timestamps = true;
     const UPDATED_AT = null;
     
