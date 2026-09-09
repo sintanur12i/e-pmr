@@ -8,6 +8,15 @@
 </div>
 
 <div class="mb-3">
+    <label for="angkatan" class="form-label">Angkatan</label>
+    <input type="text" name="angkatan" id="angkatan" class="form-control @error('angkatan') is-invalid @enderror"
+           value="{{ old('angkatan', $period->angkatan ?? '') }}" placeholder="Contoh: 23">
+    @error('angkatan')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
     <label for="start_date" class="form-label">Tanggal Mulai</label>
     <input type="date" name="start_date" id="start_date" class="form-control @error('start_date') is-invalid @enderror"
            value="{{ old('start_date', $period->start_date ?? '') }}">

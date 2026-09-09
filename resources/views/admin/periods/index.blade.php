@@ -15,6 +15,7 @@
         <thead>
             <tr>
                 <th>Nama Periode</th>
+                <th>Angkatan</th>
                 <th>Mulai</th>
                 <th>Selesai</th>
                 <th>Status</th>
@@ -25,6 +26,7 @@
             @forelse ($periods as $period)
                 <tr>
                     <td>{{ $period->name }}</td>
+                    <td>{{ $period->angkatan }}</td>
                     <td>{{ $period->start_date }}</td>
                     <td>{{ $period->end_date }}</td>
                     <td>
@@ -43,7 +45,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="text-center">Belum ada data periode.</td>
+                    <td colspan="6" class="text-center">Belum ada data periode.</td>
                 </tr>
             @endforelse
         </tbody>

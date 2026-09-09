@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('periods', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
+            $table->string('angkatan', 20);
             $table->date('start_date');
             $table->date('end_date');
             $table->enum('status', [
