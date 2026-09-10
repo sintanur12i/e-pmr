@@ -31,8 +31,23 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label">NIS / Student ID</label>
+                            <input type="text" name="student_id" class="form-control" value="{{ old('student_id') }}">
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label">Kelas</label>
                             <input type="text" name="class" class="form-control" value="{{ old('class') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">No. HP</label>
+                            <input type="text" name="phone_number" class="form-control" value="{{ old('phone_number') }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea name="address" class="form-control" rows="2">{{ old('address') }}</textarea>
                         </div>
 
                         <div class="mb-3">

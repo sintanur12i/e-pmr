@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('full_name', 100);
+            $table->string('student_id', 20)->nullable();
             $table->string('class', 50);
             $table->text('join_reason');
+            $table->string('phone_number', 15)->nullable();     
+            $table->text('address')->nullable();
             $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
             $table->enum('status', [
                 'pending',

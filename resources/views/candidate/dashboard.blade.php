@@ -4,24 +4,25 @@
 <div class="container">
     <h3>Selamat datang, {{ auth()->user()->full_name }}!</h3>
 
-    <div class="col-md-4">
-        <div class="stat-card-bar">
-            <div class="stat-title">Status Pendaftaran</div>
-            <div class="stat-value" style="font-size: 1.3rem;">
-                @switch($registration->status ?? '-')
-                    @case('pending') Pending @break
-                    @case('training') Diklat @break
-                    @case('accepted') Diterima @break
-                    @case('rejected') Ditolak @break
-                    @case('cancel_requested') Pembatalan @break
-                    @default -
-                @endswitch
-            </div>
-            <div class="stat-sub">
-                @if (($registration->status ?? '') === 'training') Sedang Mengikuti @endif
+    <div class="row">
+        <div class="col-md-4">
+            <div class="stat-card-bar">
+                <div class="stat-title">Status Pendaftaran</div>
+                <div class="stat-value" style="font-size: 1.3rem;">
+                    @switch($registration->status ?? '-')
+                        @case('pending') Pending @break
+                        @case('training') Diklat @break
+                        @case('accepted') Diterima @break
+                        @case('rejected') Ditolak @break
+                        @case('cancel_requested') Pembatalan @break
+                        @default -
+                    @endswitch
+                </div>
+                <div class="stat-sub">
+                    @if (($registration->status ?? '') === 'training') Sedang Mengikuti @endif
+                </div>
             </div>
         </div>
-    </div>
         <div class="col-md-4">
             <div class="stat-card-bar border-info">
                 <div class="stat-title">Kehadiran Agenda</div>

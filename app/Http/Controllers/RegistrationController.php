@@ -30,7 +30,10 @@ class RegistrationController extends Controller
             'email'        => 'required|email|max:100|unique:users,email',
             'password'     => 'required|string|min:6|confirmed',
             'full_name'    => 'required|string|max:100',
+            'student_id'   => 'required|string|max:20',
             'class'        => 'required|string|max:50',
+            'phone_number' => 'required|string|max:15',
+            'address'      => 'required|string',
             'join_reason'  => 'required|string',
         ]);
 
@@ -47,7 +50,10 @@ class RegistrationController extends Controller
             Registration::create([
                 'user_id'           => $user->id,
                 'full_name'         => $validated['full_name'],
+                'student_id'        => $validated['student_id'],
                 'class'             => $validated['class'],
+                'phone_number'      => $validated['phone_number'],
+                'address'           => $validated['address'],
                 'join_reason'       => $validated['join_reason'],
                 'period_id'         => $activePeriod->id,
                 'status'            => 'pending',

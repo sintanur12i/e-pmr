@@ -31,35 +31,31 @@ class RegistrationController extends Controller
 
     public function approveForm(Registration $registration)
     {
-        if ($registration->status !== 'pending') {
+        if (! in_array($registration->status, ['pending', 'training'])) {
             return back()->with('error', 'Pendaftaran ini sudah diproses sebelumnya.');
         }
+
+        $registration->load('period');
 
         return view('admin.registrations.approve', compact('registration'));
     }
 
-    public function approve(Request $request, Registration $registration)
+    public function approve(Registration $registration)
     {
-        if ($registration->status !== 'pending') {
+        if (! in_array($registration->status, ['pending', 'training'])) {
             return back()->with('error', 'Pendaftaran ini sudah diproses sebelumnya.');
         }
 
-        $validated = $request->validate([
-            'student_id'   => 'required|string|max:20',
-            'class'        => 'required|string|max:20',
-            'generation'   => 'required|string|max:15',
-            'phone_number' => 'required|string|max:15',
-            'address'      => 'required|string',
-        ]);
+        $registration->load('period');
 
-        DB::transaction(function () use ($validated, $registration) {
+        DB::transaction(function () use ($registration) {
             Member::create([
                 'user_id'            => $registration->user_id,
-                'student_id'         => $validated['student_id'],
-                'class'              => $validated['class'],
-                'generation'         => $validated['generation'],
-                'phone_number'       => $validated['phone_number'],
-                'address'            => $validated['address'],
+                'student_id'         => $registration->student_id,
+                'class'              => $registration->class,
+                'generation'         => $registration->period->angkatan,
+                'phone_number'       => $registration->phone_number,
+                'address'            => $registration->address,
                 'membership_status'  => 'active',
             ]);
 
@@ -74,7 +70,7 @@ class RegistrationController extends Controller
 
     public function reject(Registration $registration)
     {
-        if ($registration->status !== 'pending') {
+        if (! in_array($registration->status, ['pending', 'training'])) {
             return back()->with('error', 'Pendaftaran ini sudah diproses sebelumnya.');
         }
 
@@ -85,18 +81,18 @@ class RegistrationController extends Controller
             ->with('success', 'Pendaftaran ditolak.');
     }
 
-    public function approveCancel(\App\Models\Registration $registration)
-{
-    if ($registration->status !== 'cancel_requested') {
-        return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
+    public function approveCancel(Registration $registration)
+    {
+        if ($registration->status !== 'cancel_requested') {
+            return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
+        }
+
+        $registration->update(['status' => 'rejected']);
+
+        return back()->with('success', 'Pembatalan pendaftaran disetujui.');
     }
 
-    $registration->update(['status' => 'rejected']);
-
-    return back()->with('success', 'Pembatalan pendaftaran disetujui.');
-    }
-
-    public function rejectCancel(\App\Models\Registration $registration)
+    public function rejectCancel(Registration $registration)
     {
         if ($registration->status !== 'cancel_requested') {
             return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
@@ -107,7 +103,7 @@ class RegistrationController extends Controller
         return back()->with('success', 'Pengajuan pembatalan ditolak, pendaftaran tetap pending.');
     }
 
-    public function startTraining(\App\Models\Registration $registration)
+    public function startTraining(Registration $registration)
     {
         if ($registration->status !== 'pending') {
             return back()->with('error', 'Pendaftaran ini sudah diproses sebelumnya.');

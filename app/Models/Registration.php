@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Registration extends Model
 {
     protected $fillable = [
-        'user_id', 'full_name', 'class', 'join_reason',
-        'period_id', 'status', 'registration_date',
+        'user_id', 'full_name', 'student_id', 'class', 'join_reason',
+        'phone_number', 'address', 'period_id', 'status', 'registration_date',
     ];
     public $timestamps = true;
     const UPDATED_AT = null;

@@ -4,6 +4,13 @@
 <div class="container">
     <h3>Detail Pendaftaran</h3>
 
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
     <table class="table table-bordered w-auto">
         <tr><th>Nama</th><td>{{ $registration->full_name }}</td></tr>
         <tr><th>Kelas</th><td>{{ $registration->class }}</td></tr>
