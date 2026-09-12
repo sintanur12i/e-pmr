@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Member;
 use App\Models\Period;
+use App\Models\Management;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PeriodController extends Controller
 {
@@ -56,7 +59,21 @@ class PeriodController extends Controller
             'end_date.after_or_equal' => 'Tanggal selesai tidak boleh sebelum tanggal mulai.',
         ]);
 
-        $period->update($validated);
+        DB::transaction(function () use ($validated, $period) {
+            $wasActive = $period->status === 'active';   
+ 
+            $period->update($validated);
+
+        if ($wasActive && $validated['status'] === 'inactive') {
+            Member::where('generation', $period->angkatan)
+                ->where('membership_status', 'active')
+                ->update(['membership_status' => 'inactive']);
+
+            Management::where('period_id', $period->id)
+                ->where('is_active', true)
+                ->update(['is_active' => false]);
+        }
+    });
 
         return redirect()
             ->route('admin.periods.index')

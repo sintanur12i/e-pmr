@@ -11,6 +11,12 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <div class="mb-3">
+        <a href="{{ route('admin.managements.index', ['status' => 'active']) }}" class="btn btn-sm {{ $status === 'active' ? 'btn-primary' : 'btn-outline-primary' }}">Aktif</a>
+        <a href="{{ route('admin.managements.index', ['status' => 'inactive']) }}" class="btn btn-sm {{ $status === 'inactive' ? 'btn-primary' : 'btn-outline-primary' }}">Purna</a>
+        <a href="{{ route('admin.managements.index', ['status' => 'all']) }}" class="btn btn-sm {{ $status === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">Semua</a>
+    </div>
+
     <table class="table table-bordered">
         <thead>
             <tr>

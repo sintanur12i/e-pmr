@@ -10,12 +10,18 @@ use Illuminate\Http\Request;
 
 class ManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $managements = Management::with(['member.user', 'period'])->latest()->paginate(10);
+          $status = $request->query('status', 'active');
 
-        return view('admin.managements.index', compact('managements'));
-    }
+            $managements = Management::with(['member.user', 'period'])
+                ->when($status === 'active', fn ($q) => $q->where('is_active', true))
+                ->when($status === 'inactive', fn ($q) => $q->where('is_active', false))
+                ->latest()
+                ->paginate(10);
+
+            return view('admin.managements.index', compact('managements', 'status'));
+                }
 
     public function create()
     {

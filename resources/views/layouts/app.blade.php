@@ -101,7 +101,6 @@
             <li class="nav-item mb-1"><a href="{{ route('member-units.index') }}" class="nav-link {{ request()->routeIs('member-units.*') ? 'active' : '' }}"><span class="nav-icon">🤝</span> Gabung Unit</a></li>
             <li class="nav-item mb-1"><a href="{{ route('materials.index') }}" class="nav-link {{ request()->routeIs('materials.*') ? 'active' : '' }}"><span class="nav-icon">📚</span> Materi</a></li>
             <li class="nav-item mb-1"><a href="{{ route('galleries.index') }}" class="nav-link {{ request()->routeIs('galleries.*') ? 'active' : '' }}"><span class="nav-icon">🖼️</span> Galeri</a></li>
-            <li class="nav-item mb-1"><a href="{{ route('trainings.index') }}" class="nav-link {{ request()->routeIs('trainings.*') ? 'active' : '' }}"><span class="nav-icon">🎓</span> Riwayat Pelatihan</a></li>
             <li class="nav-item mb-1"><a href="{{ route('certificates.index') }}" class="nav-link">🎖️ Sertifikat Saya</a></li>
             <li class="nav-item mb-1"><a href="{{ route('member.exit.create') }}" class="nav-link {{ request()->routeIs('member.exit.*') ? 'active' : '' }}"><span class="nav-icon">🚪</span> Ajukan Keluar</a></li>
             <li class="nav-item mb-1"><a href="{{ route('profile.show') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}"><span class="nav-icon">👤</span> Profil Saya</a></li>

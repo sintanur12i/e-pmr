@@ -36,7 +36,6 @@ class MemberDashboardController extends Controller
         $myPermissionsCount = Permission::where('member_id', $member->id)->count();
         $myPermissionsPending = Permission::where('member_id', $member->id)->where('status', 'pending')->count();
 
-        $myTrainingsCount = \App\Models\Training::where('member_id', $member->id)->count();
 
         $relatedAgendas = Agenda::with(['period', 'unit'])
             ->when($activePeriod, fn ($q) => $q->where('period_id', $activePeriod->id))
@@ -50,7 +49,6 @@ class MemberDashboardController extends Controller
             'totalAgendas',
             'myPermissionsCount',
             'myPermissionsPending',
-            'myTrainingsCount',
             'relatedAgendas'
         ));
     }

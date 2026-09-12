@@ -19,13 +19,13 @@
                 <div class="stat-sub">{{ $myPermissionsPending }} menunggu approval</div>
             </div>
         </div>
-        <div class="col-md-4">
+        {{-- <div class="col-md-4">
             <div class="stat-card-bar border-info">
                 <div class="stat-title">Pelatihan</div>
                 <div class="stat-value">{{ $myTrainingsCount }}</div>
                 <div class="stat-sub">Tersimpan</div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <div class="card mt-4">
@@ -56,8 +56,8 @@
         </div>
     </div>
 
-    <div class="mt-3">
+    {{-- <div class="mt-3">
         <a href="{{ route('trainings.index') }}" class="btn btn-outline-primary btn-sm">Lihat Riwayat Pelatihan & Sertifikat Saya</a>
-    </div>
+    </div> --}}
 </div>
 @endsection

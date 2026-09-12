@@ -20,7 +20,6 @@ use App\Http\Controllers\Admin\MaterialController as AdminMaterialController;
 use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\MaterialController as PublicMaterialController;
 use App\Http\Controllers\GalleryController as PublicGalleryController;
-use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\MemberDashboardController;
@@ -104,7 +103,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:member')->group(function () {
-        Route::resource('trainings', TrainingController::class)->except(['show']);
         Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
         Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
         Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
