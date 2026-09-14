@@ -11,17 +11,31 @@ class PermissionController extends Controller
 {
     public function create(Agenda $agenda)
     {
+        $user = Auth::user();
+
+        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+            return redirect()
+                ->route('agendas.index')
+                ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
+        }
+
         return view('permissions.create', compact('agenda'));
     }
 
     public function store(Request $request, Agenda $agenda)
     {
+        $user = Auth::user();
+
+        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+            return redirect()
+                ->route('agendas.index')
+                ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
+        }
+
         $validated = $request->validate([
             'reason' => 'required|string',
             'proof'  => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
-
-        $user = Auth::user();
 
         $proofPath = null;
         if ($request->hasFile('proof')) {

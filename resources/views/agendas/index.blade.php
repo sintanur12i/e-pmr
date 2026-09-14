@@ -11,6 +11,13 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
+    @if (auth()->user()->role === 'member' && auth()->user()->member && auth()->user()->member->membership_status !== 'active')
+        <div class="alert alert-secondary">
+            <strong>Status keanggotaan Anda: Tidak Aktif.</strong>
+            Daftar di bawah hanya menampilkan riwayat agenda dari periode keanggotaan Anda sendiri.
+        </div>
+    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -33,7 +40,15 @@
                     <td>{{ $agenda->location }}</td>
                     <td>{{ $agenda->unit->name ?? '-' }}</td>
                     <td>
-                        @if (in_array(auth()->user()->role, ['member', 'candidate_member']))
+                        @php
+                            $isRestrictedMember = auth()->user()->role === 'member'
+                                && auth()->user()->member
+                                && auth()->user()->member->membership_status !== 'active';
+                        @endphp
+
+                        @if ($isRestrictedMember)
+                            <span class="text-muted">Riwayat</span>
+                        @elseif (in_array(auth()->user()->role, ['member', 'candidate_member']))
                             <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-success">Absen</button>

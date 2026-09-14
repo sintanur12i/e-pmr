@@ -4,12 +4,19 @@
 <div class="container">
     <h3>Selamat datang, {{ auth()->user()->full_name }}!</h3>
 
+    @unless ($isActive)
+        <div class="alert alert-secondary">
+            <strong>Status keanggotaan Anda: Tidak Aktif.</strong>
+            Anda tetap dapat masuk untuk melihat riwayat data, namun tidak dapat melakukan presensi, mengajukan izin, atau melihat agenda dari periode baru.
+        </div>
+    @endunless
+
     <div class="row mt-4 g-3">
         <div class="col-md-4">
             <div class="stat-card-bar">
                 <div class="stat-title">Kehadiran Pribadi</div>
                 <div class="stat-value">{{ $attendanceRate }}%</div>
-                <div class="stat-sub">Periode Aktif ({{ $totalAgendas }} agenda)</div>
+                <div class="stat-sub">{{ $isActive ? 'Periode Aktif' : 'Riwayat Periode' }} ({{ $totalAgendas }} agenda)</div>
             </div>
         </div>
         <div class="col-md-4">

@@ -13,20 +13,28 @@ class MemberDashboardController extends Controller
     public function index()
     {
         $member = Auth::user()->member;
-        $activePeriod = Period::where('status', 'active')->first();
+        $isActive = $member->membership_status === 'active';
+
+        // Member aktif melihat statistik periode yang sedang berjalan.
+        // Member yang sudah tidak aktif melihat statistik periode terakhir miliknya sendiri (riwayat).
+        if ($isActive) {
+            $myPeriod = Period::where('status', 'active')->first();
+        } else {
+            $myPeriod = Period::where('angkatan', $member->generation)->first();
+        }
 
         $attendanceRate = 0;
         $totalAgendas = 0;
 
-        if ($activePeriod) {
-            $totalAgendas = Agenda::where('period_id', $activePeriod->id)
+        if ($myPeriod) {
+            $totalAgendas = Agenda::where('period_id', $myPeriod->id)
                 ->whereIn('target_role', ['all', 'member'])
                 ->count();
 
             if ($totalAgendas > 0) {
                 $attended = Attendance::where('member_id', $member->id)
-                    ->whereHas('agenda', function ($q) use ($activePeriod) {
-                        $q->where('period_id', $activePeriod->id)->whereIn('target_role', ['all', 'member']);
+                    ->whereHas('agenda', function ($q) use ($myPeriod) {
+                        $q->where('period_id', $myPeriod->id)->whereIn('target_role', ['all', 'member']);
                     })->count();
 
                 $attendanceRate = round(($attended / $totalAgendas) * 100, 1);
@@ -36,15 +44,15 @@ class MemberDashboardController extends Controller
         $myPermissionsCount = Permission::where('member_id', $member->id)->count();
         $myPermissionsPending = Permission::where('member_id', $member->id)->where('status', 'pending')->count();
 
-
         $relatedAgendas = Agenda::with(['period', 'unit'])
-            ->when($activePeriod, fn ($q) => $q->where('period_id', $activePeriod->id))
+            ->when($myPeriod, fn ($q) => $q->where('period_id', $myPeriod->id))
             ->whereIn('target_role', ['all', 'member'])
             ->orderBy('date')
             ->take(5)
             ->get();
 
         return view('member.dashboard', compact(
+            'isActive',
             'attendanceRate',
             'totalAgendas',
             'myPermissionsCount',

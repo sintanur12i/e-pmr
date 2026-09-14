@@ -12,6 +12,10 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+            return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat melakukan presensi.');
+        }
+
         $alreadyAttended = Attendance::where('agenda_id', $agenda->id)
             ->where(function ($query) use ($user) {
                 if ($user->role === 'candidate_member') {
