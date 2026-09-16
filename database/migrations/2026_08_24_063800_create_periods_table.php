@@ -21,6 +21,7 @@ return new class extends Migration
                 'active',
                 'inactive'
             ]);
+            $table->boolean('registration_open')->default(false);
             $table->timestamp('created_at')->useCurrent();
         });
     }

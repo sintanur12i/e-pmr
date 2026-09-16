@@ -27,6 +27,10 @@ class MemberUnitController extends Controller
     {
         $member = Auth::user()->member;
 
+        if ($member->membership_status !== 'active') {
+            return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan gabung unit.');
+        }
+
         $activePeriod = Period::where('status', 'active')->first();
 
         if (! $activePeriod) {
@@ -54,11 +58,15 @@ class MemberUnitController extends Controller
         return back()->with('success', 'Pengajuan gabung unit berhasil dikirim, menunggu persetujuan admin.');
     }
 
-    public function requestExit(\App\Models\Unit $unit)
+    public function requestExit(Unit $unit)
     {
-        $member = \Illuminate\Support\Facades\Auth::user()->member;
+        $member = Auth::user()->member;
 
-        $memberUnit = \App\Models\MemberUnit::where('member_id', $member->id)
+        if ($member->membership_status !== 'active') {
+            return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan aksi ini.');
+        }
+
+        $memberUnit = MemberUnit::where('member_id', $member->id)
             ->where('unit_id', $unit->id)
             ->where('status', 'approved')
             ->first();

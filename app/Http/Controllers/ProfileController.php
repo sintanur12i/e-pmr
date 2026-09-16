@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MemberUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,15 +12,22 @@ class ProfileController extends Controller
     public function show()
     {
         $managements = [];
+        $memberUnits = [];
 
         if (Auth::user()->member) {
             $managements = \App\Models\Management::where('member_id', Auth::user()->member->id)
                 ->with('period')
                 ->orderByDesc('period_id')
                 ->get();
+
+            $memberUnits = MemberUnit::where('member_id', Auth::user()->member->id)
+                ->where('status', 'approved')
+                ->with(['unit', 'period'])
+                ->orderByDesc('period_id')
+                ->get();
         }
 
-        return view('profile.show', compact('managements'));
+        return view('profile.show', compact('managements', 'memberUnits'));
     }
 
     public function edit()

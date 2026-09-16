@@ -12,17 +12,17 @@ class RegistrationController extends Controller
 {
     public function create()
     {
-        $activePeriod = Period::where('status', 'active')->first();
+        $activePeriod = Period::where('registration_open', true)->first();
 
         return view('register', compact('activePeriod'));
     }
 
     public function store(Request $request)
     {
-        $activePeriod = Period::where('status', 'active')->first();
+        $activePeriod = Period::where('registration_open', true)->first();
 
         if (! $activePeriod) {
-            return back()->withErrors(['period' => 'Pendaftaran sedang ditutup, belum ada periode aktif.']);
+            return back()->withErrors(['period' => 'Pendaftaran sedang ditutup, belum ada periode yang membuka pendaftaran.']);
         }
 
         $validated = $request->validate([

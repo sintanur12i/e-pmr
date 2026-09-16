@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Period extends Model
 {
-    protected $fillable = ['name', 'angkatan', 'start_date', 'end_date', 'status'];
+    protected $fillable = ['name', 'angkatan', 'start_date', 'end_date', 'status', 'registration_open'];
     public $timestamps = true;
     const UPDATED_AT = null;
 

@@ -19,6 +19,7 @@
                 <th>Mulai</th>
                 <th>Selesai</th>
                 <th>Status</th>
+                <th>Pendaftaran</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -35,6 +36,13 @@
                         </span>
                     </td>
                     <td>
+                        @if ($period->registration_open)
+                            <span class="badge bg-info">Dibuka</span>
+                        @else
+                            <span class="badge bg-secondary">Ditutup</span>
+                        @endif
+                    </td>
+                    <td>
                         <a href="{{ route('admin.periods.edit', $period) }}" class="btn btn-sm btn-warning">Edit</a>
                         <form action="{{ route('admin.periods.destroy', $period) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus periode ini?')">
                             @csrf
@@ -45,7 +53,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">Belum ada data periode.</td>
+                    <td colspan="7" class="text-center">Belum ada data periode.</td>
                 </tr>
             @endforelse
         </tbody>

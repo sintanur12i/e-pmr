@@ -42,6 +42,20 @@
                 @endforelse
             </ul>
         </div>
+
+        <div class="card mt-3" style="max-width: 500px;">
+            <div class="card-header">Riwayat Unit</div>
+            <ul class="list-group list-group-flush">
+                @forelse ($memberUnits as $memberUnit)
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ $memberUnit->unit->name }} ({{ $memberUnit->period->name }})</span>
+                        <span class="badge bg-success">Anggota</span>
+                    </li>
+                @empty
+                    <li class="list-group-item text-muted">Belum pernah tergabung di unit manapun.</li>
+                @endforelse
+            </ul>
+        </div>
     @endif
 </div>
 @endsection

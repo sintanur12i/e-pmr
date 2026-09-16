@@ -33,6 +33,7 @@ class AgendaController extends Controller
             'period_id'   => 'required|exists:periods,id',
             'unit_id'     => 'nullable|exists:units,id',
             'type'        => 'required|in:general,unit,training',
+            'target_role' => 'required|in:all,member,candidate_member',
             'coach_id'    => 'nullable|exists:coaches,id',
             'title'       => 'required|string|max:100',
             'description' => 'required|string',
