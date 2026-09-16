@@ -49,12 +49,27 @@
                         @if ($isRestrictedMember)
                             <span class="text-muted">Riwayat</span>
                         @elseif (in_array(auth()->user()->role, ['member', 'candidate_member']))
-                            <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-success">Absen</button>
-                            </form>
+                            @if ($agenda->already_attended)
+                                <span class="badge bg-success">✓ Sudah Hadir</span>
+                            @elseif ($agenda->permission_status === 'pending')
+                                <span class="badge bg-warning text-dark">Izin Diajukan (Pending)</span>
+                            @elseif ($agenda->permission_status === 'approved')
+                                <span class="badge bg-info">Izin Disetujui</span>
+                            @elseif ($agenda->permission_status === 'rejected')
+                                {{-- Izin ditolak, tetap boleh coba absen manual --}}
+                                <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-success">Absen</button>
+                                </form>
+                                <span class="badge bg-danger">Izin Ditolak</span>
+                            @else
+                                <form action="{{ route('attendances.store', $agenda) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-success">Absen</button>
+                                </form>
 
-                            <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
+                                <a href="{{ route('permissions.create', $agenda) }}" class="btn btn-sm btn-warning">Ajukan Izin</a>
+                            @endif
                         @else
                             <span class="text-muted">-</span>
                         @endif
