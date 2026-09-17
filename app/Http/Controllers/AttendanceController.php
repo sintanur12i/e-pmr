@@ -16,6 +16,10 @@ class AttendanceController extends Controller
             return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat melakukan presensi.');
         }
 
+        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+            return back()->with('error', 'Pendaftaran Anda sudah tidak aktif, tidak dapat melakukan presensi.');
+        }
+
         $alreadyAttended = Attendance::where('agenda_id', $agenda->id)
             ->where(function ($query) use ($user) {
                 if ($user->role === 'candidate_member') {

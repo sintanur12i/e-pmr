@@ -33,6 +33,8 @@ class AgendaController extends Controller
                       ->orWhereIn('unit_id', $myUnitIds);
             });
 
+        // Member yang sudah tidak aktif (periode berakhir / keluar / dikeluarkan)
+        // hanya bisa melihat riwayat agenda dari periode mereka sendiri.
         if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
             $myPeriod = Period::where('angkatan', $user->member->generation)->first();
 
@@ -41,6 +43,12 @@ class AgendaController extends Controller
                 fn ($q) => $q->where('period_id', $myPeriod->id),
                 fn ($q) => $q->whereRaw('1 = 0')
             );
+        }
+
+        // Candidate yang pendaftarannya sudah ditolak/dibatalkan hanya bisa melihat
+        // riwayat agenda dari periode pendaftaran mereka sendiri.
+        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+            $query->where('period_id', $user->registration->period_id);
         }
 
         $agendas = $query->orderBy('date')->orderBy('time')->paginate(10);

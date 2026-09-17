@@ -11,6 +11,8 @@ class CandidateDashboardController extends Controller
     public function index()
     {
         $registration = Auth::user()->registration;
+        $isRestricted = $registration && $registration->status === 'rejected';
+
         $attendanceRate = 0;
 
         if ($registration) {
@@ -28,14 +30,20 @@ class CandidateDashboardController extends Controller
             }
         }
 
-        $upcomingAgendas = Agenda::with('unit')
-            ->whereIn('target_role', ['all', 'candidate_member'])
-            ->where('date', '>=', now()->toDateString())
-            ->orderBy('date')
-            ->orderBy('time')
-            ->take(5)
-            ->get();
+        // Kalau statusnya sudah ditolak/dibatalkan, tidak perlu tampilkan agenda mendatang
+        // (tidak ada lagi partisipasi baru yang relevan, cuma riwayat).
+        $upcomingAgendas = collect();
+        if ($registration && ! $isRestricted) {
+            $upcomingAgendas = Agenda::with('unit')
+                ->where('period_id', $registration->period_id)
+                ->whereIn('target_role', ['all', 'candidate_member'])
+                ->where('date', '>=', now()->toDateString())
+                ->orderBy('date')
+                ->orderBy('time')
+                ->take(5)
+                ->get();
+        }
 
-        return view('candidate.dashboard', compact('registration', 'attendanceRate', 'upcomingAgendas'));
+        return view('candidate.dashboard', compact('registration', 'attendanceRate', 'upcomingAgendas', 'isRestricted'));
     }
 }

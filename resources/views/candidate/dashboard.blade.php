@@ -42,7 +42,10 @@
     @if ($registration && $registration->status === 'accepted')
         <div class="alert alert-success mt-3 mb-0">Selamat! Pendaftaran kamu telah diterima.</div>
     @elseif ($registration && $registration->status === 'rejected')
-        <div class="alert alert-danger mt-3 mb-0">Mohon maaf, pendaftaran kamu tidak diterima.</div>
+        <div class="alert alert-danger mt-3 mb-0">
+            <strong>Pendaftaran kamu tidak diterima / telah dibatalkan.</strong>
+            Kamu tetap dapat login untuk melihat riwayat data, namun tidak dapat lagi melihat agenda baru, melakukan presensi, atau mengajukan izin.
+        </div>
     @elseif ($registration && $registration->status === 'cancel_requested')
         <div class="alert alert-warning mt-3 mb-0">Pengajuan pembatalan sedang menunggu persetujuan admin.</div>
     @endif
