@@ -17,11 +17,16 @@ class DashboardController extends Controller
 
     public function index()
     {
+        // Periode buat statistik Member: periode yang sedang berjalan/dilayani.
         $activePeriod = Period::where('status', 'active')->first();
 
+        // Periode buat statistik Calon Anggota: periode yang sedang buka pendaftaran.
+        // Bisa saja beda dari $activePeriod (misal saat masa transisi antar periode).
+        $candidatePeriod = Period::where('registration_open', true)->first();
+
         $totalMembers = Member::where('membership_status', 'active')->count();
-        $totalCandidates = $activePeriod
-            ? Registration::where('period_id', $activePeriod->id)->where('status', 'pending')->count()
+        $totalCandidates = $candidatePeriod
+            ? Registration::where('period_id', $candidatePeriod->id)->whereIn('status', ['pending', 'training'])->count()
             : 0;
 
         $memberAgendaCount = 0;
@@ -35,10 +40,6 @@ class DashboardController extends Controller
                 ->whereIn('target_role', ['all', 'member'])
                 ->count();
 
-            $candidateAgendaCount = Agenda::where('period_id', $activePeriod->id)
-                ->whereIn('target_role', ['all', 'candidate_member'])
-                ->count();
-
             // Kehadiran Member
             if ($totalMembers > 0 && $memberAgendaCount > 0) {
                 $memberActual = Attendance::whereNotNull('member_id')
@@ -48,23 +49,36 @@ class DashboardController extends Controller
 
                 $memberAttendanceRate = round(($memberActual / ($totalMembers * $memberAgendaCount)) * 100, 1);
             }
+        }
+
+        if ($candidatePeriod) {
+            $candidateAgendaCount = Agenda::where('period_id', $candidatePeriod->id)
+                ->whereIn('target_role', ['all', 'candidate_member'])
+                ->count();
 
             // Kehadiran Calon Anggota
             if ($totalCandidates > 0 && $candidateAgendaCount > 0) {
                 $candidateActual = Attendance::whereNotNull('registration_id')
-                    ->whereHas('agenda', function ($q) use ($activePeriod) {
-                        $q->where('period_id', $activePeriod->id)->whereIn('target_role', ['all', 'candidate_member']);
+                    ->whereHas('agenda', function ($q) use ($candidatePeriod) {
+                        $q->where('period_id', $candidatePeriod->id)->whereIn('target_role', ['all', 'candidate_member']);
                     })->count();
 
                 $candidateAttendanceRate = round(($candidateActual / ($totalCandidates * $candidateAgendaCount)) * 100, 1);
             }
+        }
 
-            // Kehadiran gabungan (Member + Calon Anggota)
-            $totalPossible = ($totalMembers * $memberAgendaCount) + ($totalCandidates * $candidateAgendaCount);
-            if ($totalPossible > 0) {
-                $totalActual = Attendance::whereHas('agenda', fn ($q) => $q->where('period_id', $activePeriod->id))->count();
-                $overallAttendanceRate = round(($totalActual / $totalPossible) * 100, 1);
-            }
+        // Kehadiran gabungan (Member + Calon Anggota), masing-masing dari periodenya sendiri.
+        $totalPossible = ($totalMembers * $memberAgendaCount) + ($totalCandidates * $candidateAgendaCount);
+        if ($totalPossible > 0) {
+            $memberActualTotal = $activePeriod
+                ? Attendance::whereNotNull('member_id')->whereHas('agenda', fn ($q) => $q->where('period_id', $activePeriod->id))->count()
+                : 0;
+
+            $candidateActualTotal = $candidatePeriod
+                ? Attendance::whereNotNull('registration_id')->whereHas('agenda', fn ($q) => $q->where('period_id', $candidatePeriod->id))->count()
+                : 0;
+
+            $overallAttendanceRate = round((($memberActualTotal + $candidateActualTotal) / $totalPossible) * 100, 1);
         }
 
         // Anggota di bawah standar
@@ -91,13 +105,13 @@ class DashboardController extends Controller
         }
 
         // Calon Anggota di bawah standar
-        if ($activePeriod && $candidateAgendaCount > 0) {
-            $candidates = Registration::where('period_id', $activePeriod->id)->where('status', 'pending')->get();
+        if ($candidatePeriod && $candidateAgendaCount > 0) {
+            $candidates = Registration::where('period_id', $candidatePeriod->id)->whereIn('status', ['pending', 'training'])->get();
 
             foreach ($candidates as $candidate) {
                 $attended = Attendance::where('registration_id', $candidate->id)
-                    ->whereHas('agenda', function ($q) use ($activePeriod) {
-                        $q->where('period_id', $activePeriod->id)->whereIn('target_role', ['all', 'candidate_member']);
+                    ->whereHas('agenda', function ($q) use ($candidatePeriod) {
+                        $q->where('period_id', $candidatePeriod->id)->whereIn('target_role', ['all', 'candidate_member']);
                     })->count();
 
                 $rate = round(($attended / $candidateAgendaCount) * 100, 1);

@@ -16,7 +16,7 @@ class AttendanceController extends Controller
             return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat melakukan presensi.');
         }
 
-        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+        if ($user->role === 'candidate_member' && $user->registration && in_array($user->registration->status, ['rejected', 'cancelled'])) {
             return back()->with('error', 'Pendaftaran Anda sudah tidak aktif, tidak dapat melakukan presensi.');
         }
 

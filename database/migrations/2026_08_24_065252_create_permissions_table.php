@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('permission', function (Blueprint $table) {
             $table->id();
             $table->foreignId('agenda_id')->constrained('agendas')->onDelete('cascade');
-            $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
+            $table->foreignId('member_id')->nullable()->constrained('members')->onDelete('cascade');
             $table->foreignId('registration_id')->nullable()->constrained('registrations')->onDelete('cascade');
             $table->text('reason');
             $table->string('proof', 255)->nullable();

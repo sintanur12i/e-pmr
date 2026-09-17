@@ -19,7 +19,9 @@ return new class extends Migration
             $table->enum('status', [
                 'pending',
                 'approved',
-                'rejected'
+                'rejected',
+                'exit_requested',
+                'left'
             ]);
             $table->date('application_date');
             $table->date('decision_date')->nullable();

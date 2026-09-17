@@ -19,7 +19,7 @@ class PermissionController extends Controller
                 ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
         }
 
-        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+        if ($user->role === 'candidate_member' && $user->registration && in_array($user->registration->status, ['rejected', 'cancelled'])) {
             return redirect()
                 ->route('agendas.index')
                 ->with('error', 'Pendaftaran Anda sudah tidak aktif, tidak dapat mengajukan izin.');
@@ -38,7 +38,7 @@ class PermissionController extends Controller
                 ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
         }
 
-        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+        if ($user->role === 'candidate_member' && $user->registration && in_array($user->registration->status, ['rejected', 'cancelled'])) {
             return redirect()
                 ->route('agendas.index')
                 ->with('error', 'Pendaftaran Anda sudah tidak aktif, tidak dapat mengajukan izin.');

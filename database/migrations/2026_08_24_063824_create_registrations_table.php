@@ -17,15 +17,16 @@ return new class extends Migration
             $table->string('full_name', 100);
             $table->string('student_id', 20)->nullable();
             $table->string('class', 50);
-            $table->text('join_reason');
-            $table->string('phone_number', 15)->nullable();     
+            $table->string('phone_number', 15)->nullable();
             $table->text('address')->nullable();
+            $table->text('join_reason');
             $table->foreignId('period_id')->constrained('periods')->onDelete('cascade');
             $table->enum('status', [
                 'pending',
                 'training',
                 'accepted',
                 'rejected',
+                'cancelled',
                 'cancel_requested'
             ])->default('pending');
             $table->date('registration_date');

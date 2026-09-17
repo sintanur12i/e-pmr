@@ -70,8 +70,8 @@ class RegistrationController extends Controller
     {
         $registration = \Illuminate\Support\Facades\Auth::user()->registration;
 
-        if (! $registration || $registration->status !== 'pending') {
-            return back()->with('error', 'Tidak ada pendaftaran pending yang bisa dibatalkan.');
+        if (! $registration || ! in_array($registration->status, ['pending', 'training'])) {
+            return back()->with('error', 'Tidak ada pendaftaran yang bisa dibatalkan.');
         }
 
         $registration->update(['status' => 'cancel_requested']);

@@ -14,6 +14,7 @@
                         @case('training') Diklat @break
                         @case('accepted') Diterima @break
                         @case('rejected') Ditolak @break
+                        @case('cancelled') Dibatalkan @break
                         @case('cancel_requested') Pembatalan @break
                         @default -
                     @endswitch
@@ -43,7 +44,12 @@
         <div class="alert alert-success mt-3 mb-0">Selamat! Pendaftaran kamu telah diterima.</div>
     @elseif ($registration && $registration->status === 'rejected')
         <div class="alert alert-danger mt-3 mb-0">
-            <strong>Pendaftaran kamu tidak diterima / telah dibatalkan.</strong>
+            <strong>Pendaftaran kamu tidak diterima.</strong>
+            Kamu tetap dapat login untuk melihat riwayat data, namun tidak dapat lagi melihat agenda baru, melakukan presensi, atau mengajukan izin.
+        </div>
+    @elseif ($registration && $registration->status === 'cancelled')
+        <div class="alert alert-secondary mt-3 mb-0">
+            <strong>Pendaftaran kamu telah dibatalkan atas permintaan sendiri.</strong>
             Kamu tetap dapat login untuk melihat riwayat data, namun tidak dapat lagi melihat agenda baru, melakukan presensi, atau mengajukan izin.
         </div>
     @elseif ($registration && $registration->status === 'cancel_requested')
@@ -78,7 +84,7 @@
         </div>
     </div>
 
-    @if ($registration && $registration->status === 'pending')
+    @if ($registration && in_array($registration->status, ['pending', 'training']))
         <form action="{{ route('registration.cancel') }}" method="POST" class="mt-3" onsubmit="return confirm('Yakin ajukan pembatalan pendaftaran?')">
             @csrf
             <button type="submit" class="btn btn-outline-danger btn-sm">Ajukan Pembatalan Pendaftaran</button>

@@ -20,6 +20,7 @@ return new class extends Migration
                 'unit',
                 'training'
             ]);
+            $table->enum('target_role', ['all', 'member', 'candidate_member'])->default('all');
 
             $table->foreignId('coach_id')->nullable()->constrained('coaches')->onDelete('set null');
             $table->string('title', 100);

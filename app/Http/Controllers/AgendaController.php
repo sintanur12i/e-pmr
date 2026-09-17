@@ -33,8 +33,6 @@ class AgendaController extends Controller
                       ->orWhereIn('unit_id', $myUnitIds);
             });
 
-        // Member yang sudah tidak aktif (periode berakhir / keluar / dikeluarkan)
-        // hanya bisa melihat riwayat agenda dari periode mereka sendiri.
         if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
             $myPeriod = Period::where('angkatan', $user->member->generation)->first();
 
@@ -45,15 +43,12 @@ class AgendaController extends Controller
             );
         }
 
-        // Candidate yang pendaftarannya sudah ditolak/dibatalkan hanya bisa melihat
-        // riwayat agenda dari periode pendaftaran mereka sendiri.
-        if ($user->role === 'candidate_member' && $user->registration && $user->registration->status === 'rejected') {
+        if ($user->role === 'candidate_member' && $user->registration && in_array($user->registration->status, ['rejected', 'cancelled'])) {
             $query->where('period_id', $user->registration->period_id);
         }
 
         $agendas = $query->orderBy('date')->orderBy('time')->paginate(10);
 
-        // Tandai per-agenda: apakah user sudah absen, dan status pengajuan izinnya (kalau ada).
         if (in_array($user->role, ['member', 'candidate_member'])) {
             $ownerField = $user->role === 'candidate_member' ? 'registration_id' : 'member_id';
             $ownerId = $user->role === 'candidate_member' ? ($user->registration->id ?? null) : ($user->member->id ?? null);

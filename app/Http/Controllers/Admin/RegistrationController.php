@@ -87,7 +87,7 @@ class RegistrationController extends Controller
             return back()->with('error', 'Pengajuan ini sudah diproses sebelumnya.');
         }
 
-        $registration->update(['status' => 'rejected']);
+        $registration->update(['status' => 'cancelled']);
 
         return back()->with('success', 'Pembatalan pendaftaran disetujui.');
     }
