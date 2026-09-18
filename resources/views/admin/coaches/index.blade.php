@@ -46,3 +46,4 @@
     {{ $coaches->links() }}
 </div>
 @endsection
+

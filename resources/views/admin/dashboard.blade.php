@@ -8,44 +8,8 @@
         <div class="alert alert-warning">Belum ada periode aktif — statistik di bawah tidak dapat dihitung.</div>
     @endif
 
-    {{-- <div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2>{{ $overallAttendanceRate }}%</h2>
-                <p class="text-muted mb-0">Kehadiran Keseluruhan</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2>{{ $memberAttendanceRate }}%</h2>
-                <p class="text-muted mb-0">Kehadiran Member ({{ $totalMembers }} orang)</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h2>{{ $candidateAttendanceRate }}%</h2>
-                <p class="text-muted mb-0">Kehadiran Calon Anggota ({{ $totalCandidates }} orang)</p>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
 <div class="row mb-4 g-3">
-    <div class="col-md-4">
-        <div class="stat-card">
-            <div class="stat-icon stat-icon-primary">📊</div>
-            <div>
-                <div class="stat-value">{{ $overallAttendanceRate }}%</div>
-                <div class="stat-label">Kehadiran Keseluruhan</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon stat-icon-info">🧑‍🤝‍🧑</div>
             <div>
@@ -54,7 +18,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon stat-icon-info">🙋</div>
             <div>
@@ -63,10 +27,7 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="row mb-4 g-3">
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon stat-icon-warning">⏳</div>
             <div>
@@ -75,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="stat-card">
             <div class="stat-icon stat-icon-danger">⚠️</div>
             <div>

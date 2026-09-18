@@ -33,7 +33,6 @@ class DashboardController extends Controller
         $candidateAgendaCount = 0;
         $memberAttendanceRate = 0;
         $candidateAttendanceRate = 0;
-        $overallAttendanceRate = 0;
 
         if ($activePeriod) {
             $memberAgendaCount = Agenda::where('period_id', $activePeriod->id)
@@ -65,20 +64,6 @@ class DashboardController extends Controller
 
                 $candidateAttendanceRate = round(($candidateActual / ($totalCandidates * $candidateAgendaCount)) * 100, 1);
             }
-        }
-
-        // Kehadiran gabungan (Member + Calon Anggota), masing-masing dari periodenya sendiri.
-        $totalPossible = ($totalMembers * $memberAgendaCount) + ($totalCandidates * $candidateAgendaCount);
-        if ($totalPossible > 0) {
-            $memberActualTotal = $activePeriod
-                ? Attendance::whereNotNull('member_id')->whereHas('agenda', fn ($q) => $q->where('period_id', $activePeriod->id))->count()
-                : 0;
-
-            $candidateActualTotal = $candidatePeriod
-                ? Attendance::whereNotNull('registration_id')->whereHas('agenda', fn ($q) => $q->where('period_id', $candidatePeriod->id))->count()
-                : 0;
-
-            $overallAttendanceRate = round((($memberActualTotal + $candidateActualTotal) / $totalPossible) * 100, 1);
         }
 
         // Anggota di bawah standar
@@ -138,7 +123,6 @@ class DashboardController extends Controller
             'activePeriod',
             'totalMembers',
             'totalCandidates',
-            'overallAttendanceRate',
             'memberAttendanceRate',
             'candidateAttendanceRate',
             'membersBelowStandard',

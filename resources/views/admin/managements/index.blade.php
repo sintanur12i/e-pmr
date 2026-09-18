@@ -56,3 +56,4 @@
     {{ $managements->links() }}
 </div>
 @endsection
+

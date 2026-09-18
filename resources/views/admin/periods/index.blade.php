@@ -62,3 +62,4 @@
     {{ $periods->links() }}
 </div>
 @endsection
+

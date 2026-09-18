@@ -41,3 +41,4 @@
     {{ $materials->links() }}
 </div>
 @endsection
+

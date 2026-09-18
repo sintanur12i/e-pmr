@@ -121,5 +121,37 @@
         </main>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (Session::has('success'))
+    <script>
+    Swal.fire({
+    title: 'Berhasil',
+    text: "{{ Session::get('success') }}",
+    icon: 'success'
+    });
+    </script>
+    @endif
+
+    <script>
+        function confirmDelete(form) {
+            Swal.fire({
+                title: 'Yakin hapus?',
+                text: 'Data yang dihapus tidak bisa dikembalikan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+    </script>
+
+    @stack('scripts')
 </body>
 </html>

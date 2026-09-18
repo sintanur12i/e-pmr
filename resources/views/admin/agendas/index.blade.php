@@ -55,3 +55,4 @@
     {{ $agendas->links() }}
 </div>
 @endsection
+

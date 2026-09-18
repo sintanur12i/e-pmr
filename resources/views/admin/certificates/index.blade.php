@@ -53,3 +53,4 @@
     {{ $certificates->links() }}
 </div>
 @endsection
+
