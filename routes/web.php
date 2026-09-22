@@ -53,8 +53,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:member,candidate_member')->group(function () {
         Route::get('/agendas/{agenda}/permission', [PermissionController::class, 'create'])->name('permissions.create');
         Route::post('/agendas/{agenda}/permission', [PermissionController::class, 'store'])->name('permissions.store');
-        Route::get('/my-units', [MemberUnitController::class, 'index'])->name('member-units.index');
-        Route::post('/my-units/{unit}', [MemberUnitController::class, 'store'])->name('member-units.store');
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -105,6 +103,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:member')->group(function () {
         Route::get('/exit-request', [MemberExitController::class, 'create'])->name('member.exit.create');
         Route::post('/exit-request', [MemberExitController::class, 'store'])->name('member.exit.store');
+        Route::get('/my-units', [MemberUnitController::class, 'index'])->name('member-units.index');
+        Route::post('/my-units/{unit}', [MemberUnitController::class, 'store'])->name('member-units.store');
         Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
         Route::get('/my-certificates', [CertificateController::class, 'index'])->name('certificates.index');
     });

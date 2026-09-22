@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\Period;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PeriodController extends Controller
 {
@@ -37,9 +38,19 @@ class PeriodController extends Controller
 
         $validated['registration_open'] = $request->boolean('registration_open');
 
+        // Cuma boleh ada 1 periode yang statusnya "active" dalam satu waktu.
+        if ($validated['status'] === 'active') {
+            $alreadyActive = Period::where('status', 'active')->exists();
+
+            if ($alreadyActive) {
+                throw ValidationException::withMessages([
+                    'status' => 'Sudah ada periode lain yang berstatus Active. Nonaktifkan periode itu dulu sebelum mengaktifkan periode ini.',
+                ]);
+            }
+        }
+
         DB::transaction(function () use ($validated) {
             if ($validated['registration_open']) {
-                // Cuma 1 periode yang boleh buka pendaftaran dalam satu waktu.
                 Period::where('registration_open', true)->update(['registration_open' => false]);
             }
 
@@ -70,25 +81,36 @@ class PeriodController extends Controller
 
         $validated['registration_open'] = $request->boolean('registration_open');
 
+        // Cuma boleh ada 1 periode yang statusnya "active" dalam satu waktu
+        // (tidak menghitung periode ini sendiri).
+        if ($validated['status'] === 'active') {
+            $alreadyActive = Period::where('id', '!=', $period->id)
+                ->where('status', 'active')
+                ->exists();
+
+            if ($alreadyActive) {
+                throw ValidationException::withMessages([
+                    'status' => 'Sudah ada periode lain yang berstatus Active. Nonaktifkan periode itu dulu sebelum mengaktifkan periode ini.',
+                ]);
+            }
+        }
+
         DB::transaction(function () use ($validated, $period) {
-            $wasActive = $period->status === 'active';   // cek status SEBELUM diupdate
+            $wasActive = $period->status === 'active';
 
             if ($validated['registration_open']) {
-                // Cuma 1 periode yang boleh buka pendaftaran dalam satu waktu.
                 Period::where('id', '!=', $period->id)
                     ->where('registration_open', true)
                     ->update(['registration_open' => false]);
             }
 
-            $period->update($validated);                  // baru update periode-nya
+            $period->update($validated);
 
             if ($wasActive && $validated['status'] === 'inactive') {
-                // Nonaktifkan semua member dengan angkatan yang sama
                 Member::where('generation', $period->angkatan)
                     ->where('membership_status', 'active')
                     ->update(['membership_status' => 'inactive']);
 
-                // Nonaktifkan semua jabatan kepengurusan di periode ini
                 Management::where('period_id', $period->id)
                     ->where('is_active', true)
                     ->update(['is_active' => false]);
