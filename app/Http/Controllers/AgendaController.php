@@ -33,7 +33,10 @@ class AgendaController extends Controller
                       ->orWhereIn('unit_id', $myUnitIds);
             });
 
-        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+        // Hanya member yang BENAR-BENAR sudah tidak aktif (periode berakhir / dikeluarkan /
+        // pengajuan keluar SUDAH disetujui admin) yang dibatasi. Selama masih 'pending_exit'
+        // (menunggu keputusan admin), member tetap bisa beraktivitas normal.
+        if ($user->role === 'member' && $user->member && $user->member->membership_status === 'inactive') {
             $myPeriod = Period::where('angkatan', $user->member->generation)->first();
 
             $query->when(

@@ -13,11 +13,13 @@ class MemberDashboardController extends Controller
     public function index()
     {
         $member = Auth::user()->member;
-        $isActive = $member->membership_status === 'active';
+        $membershipStatus = $member->membership_status; // 'active' | 'pending_exit' | 'inactive'
+        $isRestricted = $membershipStatus === 'inactive';
 
-        // Member aktif melihat statistik periode yang sedang berjalan.
-        // Member yang sudah tidak aktif melihat statistik periode terakhir miliknya sendiri (riwayat).
-        if ($isActive) {
+        // Member aktif ATAU yang masih menunggu persetujuan pengajuan keluar (pending_exit)
+        // tetap dianggap "beroperasi normal" dan melihat statistik periode yang sedang berjalan.
+        // Hanya yang BENAR-BENAR sudah inactive yang dialihkan ke statistik periode lamanya sendiri (riwayat).
+        if (! $isRestricted) {
             $myPeriod = Period::where('status', 'active')->first();
         } else {
             $myPeriod = Period::where('angkatan', $member->generation)->first();
@@ -52,7 +54,8 @@ class MemberDashboardController extends Controller
             ->get();
 
         return view('member.dashboard', compact(
-            'isActive',
+            'membershipStatus',
+            'isRestricted',
             'attendanceRate',
             'totalAgendas',
             'myPermissionsCount',

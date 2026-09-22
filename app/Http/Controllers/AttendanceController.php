@@ -12,7 +12,7 @@ class AttendanceController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+        if ($user->role === 'member' && $user->member && $user->member->membership_status === 'inactive') {
             return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat melakukan presensi.');
         }
 

@@ -27,7 +27,7 @@ class MemberUnitController extends Controller
     {
         $member = Auth::user()->member;
 
-        if ($member->membership_status !== 'active') {
+        if ($member->membership_status === 'inactive') {
             return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan gabung unit.');
         }
 
@@ -62,7 +62,7 @@ class MemberUnitController extends Controller
     {
         $member = Auth::user()->member;
 
-        if ($member->membership_status !== 'active') {
+        if ($member->membership_status === 'inactive') {
             return back()->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan aksi ini.');
         }
 

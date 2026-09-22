@@ -4,19 +4,24 @@
 <div class="container">
     <h3>Selamat datang, {{ auth()->user()->full_name }}!</h3>
 
-    @unless ($isActive)
+    @if ($membershipStatus === 'inactive')
         <div class="alert alert-secondary">
             <strong>Status keanggotaan Anda: Tidak Aktif.</strong>
             Anda tetap dapat masuk untuk melihat riwayat data, namun tidak dapat melakukan presensi, mengajukan izin, atau melihat agenda dari periode baru.
         </div>
-    @endunless
+    @elseif ($membershipStatus === 'pending_exit')
+        <div class="alert alert-warning">
+            <strong>Pengajuan keluar Anda sedang menunggu persetujuan admin.</strong>
+            Selama belum disetujui, Anda tetap dapat beraktivitas normal seperti biasa.
+        </div>
+    @endif
 
     <div class="row mt-4 g-3">
         <div class="col-md-4">
             <div class="stat-card-bar">
                 <div class="stat-title">Kehadiran Pribadi</div>
                 <div class="stat-value">{{ $attendanceRate }}%</div>
-                <div class="stat-sub">{{ $isActive ? 'Periode Aktif' : 'Riwayat Periode' }} ({{ $totalAgendas }} agenda)</div>
+                <div class="stat-sub">{{ $isRestricted ? 'Riwayat Periode' : 'Periode Aktif' }} ({{ $totalAgendas }} agenda)</div>
             </div>
         </div>
         <div class="col-md-4">
@@ -26,13 +31,6 @@
                 <div class="stat-sub">{{ $myPermissionsPending }} menunggu approval</div>
             </div>
         </div>
-        {{-- <div class="col-md-4">
-            <div class="stat-card-bar border-info">
-                <div class="stat-title">Pelatihan</div>
-                <div class="stat-value">{{ $myTrainingsCount }}</div>
-                <div class="stat-sub">Tersimpan</div>
-            </div>
-        </div> --}}
     </div>
 
     <div class="card mt-4">
@@ -62,9 +60,5 @@
             </table>
         </div>
     </div>
-
-    {{-- <div class="mt-3">
-        <a href="{{ route('trainings.index') }}" class="btn btn-outline-primary btn-sm">Lihat Riwayat Pelatihan & Sertifikat Saya</a>
-    </div> --}}
 </div>
 @endsection

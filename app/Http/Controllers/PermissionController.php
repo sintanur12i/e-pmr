@@ -13,7 +13,7 @@ class PermissionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+        if ($user->role === 'member' && $user->member && $user->member->membership_status === 'inactive') {
             return redirect()
                 ->route('agendas.index')
                 ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
@@ -32,7 +32,7 @@ class PermissionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'member' && $user->member && $user->member->membership_status !== 'active') {
+        if ($user->role === 'member' && $user->member && $user->member->membership_status === 'inactive') {
             return redirect()
                 ->route('agendas.index')
                 ->with('error', 'Akun Anda sudah tidak aktif, tidak dapat mengajukan izin.');
