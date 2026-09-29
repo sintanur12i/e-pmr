@@ -107,10 +107,16 @@ class PeriodController extends Controller
             $period->update($validated);
 
             if ($wasActive && $validated['status'] === 'inactive') {
-                Member::where('generation', $period->angkatan)
-                    ->where('membership_status', 'active')
-                    ->update(['membership_status' => 'inactive']);
+                // Nonaktifkan semua member angkatan ini (beserta jabatan & keanggotaan unitnya).
+                $members = Member::where('generation', $period->angkatan)
+                    ->whereIn('membership_status', ['active', 'pending_exit'])
+                    ->get();
 
+                foreach ($members as $member) {
+                    $member->deactivate();
+                }
+
+                // Jabatan kepengurusan pada periode ini ikut ditutup.
                 Management::where('period_id', $period->id)
                     ->where('is_active', true)
                     ->update(['is_active' => false]);

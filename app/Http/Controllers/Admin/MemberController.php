@@ -22,14 +22,14 @@ class MemberController extends Controller
 
     public function remove(Member $member)
     {
-        $member->update(['membership_status' => 'inactive']);
+        $member->deactivate();
 
         return back()->with('success', 'Anggota berhasil dikeluarkan.');
     }
 
     public function approveExit(Member $member)
     {
-        $member->update(['membership_status' => 'inactive']);
+        $member->deactivate();
 
         return back()->with('success', 'Pengajuan keluar disetujui.');
     }
