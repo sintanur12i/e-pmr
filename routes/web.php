@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\MemberController as AdminMemberController;
 use App\Http\Controllers\MemberExitController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\Admin\AttendanceRecapController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -94,6 +95,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/registrations/{registration}/approve-cancel', [AdminRegistrationController::class, 'approveCancel'])->name('registrations.approveCancel');
         Route::post('/registrations/{registration}/reject-cancel', [AdminRegistrationController::class, 'rejectCancel'])->name('registrations.rejectCancel');
         Route::resource('certificates', AdminCertificateController::class)->except(['show', 'edit', 'update']);
+        Route::get('/attendance-recap', [AttendanceRecapController::class, 'index'])->name('attendance-recap.index');
     });
 
     Route::middleware('role:member')->prefix('member')->name('member.')->group(function () {

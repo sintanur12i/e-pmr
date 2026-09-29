@@ -89,6 +89,7 @@
             <li class="nav-item mb-1"><a href="{{ route('admin.managements.index') }}" class="nav-link {{ request()->routeIs('admin.managements.*') ? 'active' : '' }}"><span class="nav-icon">👥</span> Kepengurusan</a></li>
             <li class="nav-item mb-1"><a href="{{ route('admin.agendas.index') }}" class="nav-link {{ request()->routeIs('admin.agendas.*') ? 'active' : '' }}"><span class="nav-icon">📌</span> Agenda</a></li>
             <li class="nav-item mb-1"><a href="{{ route('admin.permissions.index') }}" class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}"><span class="nav-icon">📄</span> Izin</a></li>
+            <li class="nav-item mb-1"><a href="{{ route('admin.attendance-recap.index') }}" class="nav-link {{ request()->routeIs('admin.attendance-recap.*') ? 'active' : '' }}"><span class="nav-icon">📊</span> Rekap Absensi</a></li>
             <li class="nav-item mb-1"><a href="{{ route('admin.member-units.index') }}" class="nav-link {{ request()->routeIs('admin.member-units.*') ? 'active' : '' }}"><span class="nav-icon">🔁</span> Pengajuan Unit</a></li>
             <li class="nav-item mb-1"><a href="{{ route('admin.materials.index') }}" class="nav-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}"><span class="nav-icon">📚</span> Materi</a></li>
             <li class="nav-item mb-1"><a href="{{ route('admin.galleries.index') }}" class="nav-link {{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}"><span class="nav-icon">🖼️</span> Galeri</a></li>
