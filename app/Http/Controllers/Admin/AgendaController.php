@@ -7,6 +7,7 @@ use App\Models\Agenda;
 use App\Models\Coach;
 use App\Models\Period;
 use App\Models\Unit;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 
 class AgendaController extends Controller
@@ -20,7 +21,9 @@ class AgendaController extends Controller
 
     public function create()
     {
-        $periods = Period::where('status', 'active')->get();
+        $periods = Period::where('status', 'active')
+            ->orWhere('registration_open', true)
+            ->get();
         $units = Unit::all();
         $coaches = Coach::all();
 
@@ -44,7 +47,14 @@ class AgendaController extends Controller
 
         $validated['created_by'] = auth()->id();
 
-        Agenda::create($validated);
+        $agenda = Agenda::create($validated);
+
+        Notify::agenda(
+            $agenda,
+            'Agenda baru',
+            $agenda->title . ' di ' . $agenda->location . '.',
+            route('agendas.index')
+        );
 
         return redirect()
             ->route('admin.agendas.index')

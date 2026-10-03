@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Period;
 use App\Models\Registration;
 use App\Models\User;
+use App\Support\Notify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RegistrationController extends Controller
@@ -37,7 +39,7 @@ class RegistrationController extends Controller
             'join_reason'  => 'required|string',
         ]);
 
-        DB::transaction(function () use ($validated, $activePeriod) {
+        $user = DB::transaction(function () use ($validated, $activePeriod) {
             $user = User::create([
                 'username'  => $validated['username'],
                 'email'     => $validated['email'],
@@ -59,7 +61,15 @@ class RegistrationController extends Controller
                 'status'            => 'pending',
                 'registration_date' => now()->toDateString(),
             ]);
+
+            return $user;
         });
+
+        Notify::admins(
+            'Pendaftaran baru',
+            $user->full_name . ' mendaftar sebagai calon anggota.',
+            route('admin.registrations.index')
+        );
 
         return redirect()
             ->route('login')
@@ -68,13 +78,20 @@ class RegistrationController extends Controller
 
     public function cancel()
     {
-        $registration = \Illuminate\Support\Facades\Auth::user()->registration;
+        $user = Auth::user();
+        $registration = $user->registration;
 
         if (! $registration || ! in_array($registration->status, ['pending', 'training'])) {
             return back()->with('error', 'Tidak ada pendaftaran yang bisa dibatalkan.');
         }
 
         $registration->update(['status' => 'cancel_requested']);
+
+        Notify::admins(
+            'Pengajuan pembatalan',
+            $user->full_name . ' mengajukan pembatalan pendaftaran.',
+            route('admin.registrations.index', ['status' => 'cancel_requested'])
+        );
 
         return redirect()
             ->route('candidate.dashboard')

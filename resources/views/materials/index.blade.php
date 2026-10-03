@@ -11,7 +11,10 @@
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title mb-1">{{ $material->title }}</h6>
                         <p class="card-text small text-muted mb-2">{{ $material->date }}</p>
-                        <a href="{{ Storage::url($material->file) }}" target="_blank" class="btn btn-sm btn-primary mt-auto">Unduh / Lihat</a>
+                        <div class="d-flex gap-2 mt-auto">
+                            <a href="{{ route('materials.view', $material) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill">Lihat</a>
+                            <a href="{{ route('materials.download', $material) }}" class="btn btn-sm btn-primary flex-fill">Unduh</a>
+                        </div>
                     </div>
                 </div>
             </div>

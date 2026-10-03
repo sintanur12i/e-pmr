@@ -7,6 +7,7 @@ use App\Models\Certificate;
 use App\Models\Member;
 use App\Models\Period;
 use App\Models\Unit;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 
 class CertificateController extends Controller
@@ -42,11 +43,18 @@ class CertificateController extends Controller
         $validated['file'] = $request->file('file')->store('certificates', 'public');
         $validated['issued_by'] = auth()->id();
 
-        Certificate::create($validated);
+            Certificate::create($validated);
 
-        return redirect()
-            ->route('admin.certificates.index')
-            ->with('success', 'Sertifikat berhasil diterbitkan.');
+            Notify::user(
+                Member::with('user')->find($validated['member_id'])?->user,
+                'Sertifikat baru',
+                'Sertifikat "' . $validated['title'] . '" telah diterbitkan untukmu.',
+                route('certificates.index')
+            );
+
+            return redirect()
+                ->route('admin.certificates.index')
+                ->with('success', 'Sertifikat berhasil diterbitkan.');
     }
 
     public function destroy(Certificate $certificate)

@@ -11,13 +11,19 @@ class Member extends Model
     protected $fillable = [
         'user_id', 'student_id', 'class', 'generation',
         'phone_number', 'address', 'membership_status',
+        'exit_reason', 'exit_requested_at',
     ];
+
+    protected $casts = [
+        'exit_requested_at' => 'datetime',
+    ];
+
     public $timestamps = true;
     const UPDATED_AT = null;
 
-    public function user() { 
+    public function user() {
         return $this->belongsTo(User::class, 'user_id');
-     }
+    }
     public function managements() { return $this->hasMany(Management::class, 'member_id'); }
     public function memberUnits() { return $this->hasMany(MemberUnit::class, 'member_id'); }
     public function attendances() { return $this->hasMany(Attendance::class, 'member_id'); }

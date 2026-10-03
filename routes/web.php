@@ -29,6 +29,7 @@ use App\Http\Controllers\MemberExitController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\Admin\AttendanceRecapController;
+use App\Http\Controllers\NotificationController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -42,10 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/agendas', [PublicAgendaController::class, 'index'])->name('agendas.index');
     Route::post('/agendas/{agenda}/attend', [AttendanceController::class, 'store'])->name('attendances.store');
     Route::get('/materials', [PublicMaterialController::class, 'index'])->name('materials.index');
+    Route::get('/materials/{material}/view', [PublicMaterialController::class, 'view'])->name('materials.view');
+    Route::get('/materials/{material}/download', [PublicMaterialController::class, 'download'])->name('materials.download');
     Route::get('/galleries', [PublicGalleryController::class, 'index'])->name('galleries.index');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
     Route::middleware('role:candidate_member')->group(function () {
     Route::post('/my-registration/cancel', [RegistrationController::class, 'cancel'])->name('registration.cancel');
     });
@@ -109,6 +115,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/my-units/{unit}', [MemberUnitController::class, 'store'])->name('member-units.store');
         Route::post('/my-units/{unit}/exit', [MemberUnitController::class, 'requestExit'])->name('member-units.requestExit');
         Route::get('/my-certificates', [CertificateController::class, 'index'])->name('certificates.index');
+        Route::get('/my-certificates/{certificate}/download', [CertificateController::class, 'download'])->name('certificates.download');
     });
 
     Route::middleware('role:candidate_member')->prefix('candidate')->name('candidate.')->group(function () {

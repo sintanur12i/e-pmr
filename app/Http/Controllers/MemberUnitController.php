@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MemberUnit;
 use App\Models\Period;
 use App\Models\Unit;
+use App\Support\Notify;
 use Illuminate\Support\Facades\Auth;
 
 class MemberUnitController extends Controller
@@ -18,6 +19,7 @@ class MemberUnitController extends Controller
             ->with('unit')
             ->latest()
             ->get()
+            ->unique('unit_id')
             ->keyBy('unit_id');
 
         return view('member_units.index', compact('units', 'myApplications'));
@@ -47,13 +49,19 @@ class MemberUnitController extends Controller
             return back()->with('error', 'Anda sudah pernah mengajukan atau sudah tergabung di unit ini pada periode ini.');
         }
 
-        MemberUnit::create([
-            'member_id'         => $member->id,
-            'unit_id'           => $unit->id,
-            'period_id'         => $activePeriod->id,
-            'status'            => 'pending',
-            'application_date'  => now()->toDateString(),
-        ]);
+            MemberUnit::create([
+        'member_id'         => $member->id,
+        'unit_id'           => $unit->id,
+        'period_id'         => $activePeriod->id,
+        'status'            => 'pending',
+        'application_date'  => now()->toDateString(),
+    ]);
+
+        Notify::admins(
+            'Pengajuan gabung unit',
+            Auth::user()->full_name . ' mengajukan gabung unit ' . $unit->name . '.',
+            route('admin.member-units.index')
+        );
 
         return back()->with('success', 'Pengajuan gabung unit berhasil dikirim, menunggu persetujuan admin.');
     }
@@ -75,8 +83,14 @@ class MemberUnitController extends Controller
             return back()->with('error', 'Anda tidak tergabung di unit ini.');
         }
 
-        $memberUnit->update(['status' => 'exit_requested']);
+            $memberUnit->update(['status' => 'exit_requested']);
 
-        return back()->with('success', 'Pengajuan keluar dari unit telah dikirim, menunggu persetujuan admin.');
+    Notify::admins(
+        'Pengajuan keluar unit',
+        Auth::user()->full_name . ' mengajukan keluar dari unit ' . $unit->name . '.',
+        route('admin.member-units.index', ['status' => 'exit_requested'])
+    );
+
+    return back()->with('success', 'Pengajuan keluar dari unit telah dikirim, menunggu persetujuan admin.');
     }
 }

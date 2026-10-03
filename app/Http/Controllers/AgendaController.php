@@ -46,8 +46,12 @@ class AgendaController extends Controller
             );
         }
 
-        if ($user->role === 'candidate_member' && $user->registration && in_array($user->registration->status, ['rejected', 'cancelled'])) {
-            $query->where('period_id', $user->registration->period_id);
+        if ($user->role === 'candidate_member') {
+            $query->when(
+                $user->registration,
+                fn ($q) => $q->where('period_id', $user->registration->period_id),
+                fn ($q) => $q->whereRaw('1 = 0')
+            );
         }
 
         $agendas = $query->orderBy('date')->orderBy('time')->paginate(10);

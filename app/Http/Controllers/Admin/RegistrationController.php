@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\Registration;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,13 @@ class RegistrationController extends Controller
             $registration->update(['status' => 'accepted']);
         });
 
+        Notify::user(
+            $registration->user,
+            'Pendaftaran diterima',
+            'Selamat, kamu sekarang resmi menjadi anggota PMR.',
+            route('member.dashboard')
+        );
+
         return redirect()
             ->route('admin.registrations.index')
             ->with('success', 'Pendaftaran disetujui, akun member berhasil dibuat.');
@@ -75,6 +83,13 @@ class RegistrationController extends Controller
         }
 
         $registration->update(['status' => 'rejected']);
+
+        Notify::user(
+            $registration->user,
+            'Pendaftaran ditolak',
+            'Mohon maaf, pendaftaranmu belum dapat diterima.',
+            route('candidate.dashboard')
+        );
 
         return redirect()
             ->route('admin.registrations.index')
@@ -89,6 +104,13 @@ class RegistrationController extends Controller
 
         $registration->update(['status' => 'cancelled']);
 
+        Notify::user(
+            $registration->user,
+            'Pembatalan disetujui',
+            'Pengajuan pembatalan pendaftaranmu telah disetujui.',
+            route('candidate.dashboard')
+        );
+
         return back()->with('success', 'Pembatalan pendaftaran disetujui.');
     }
 
@@ -100,6 +122,13 @@ class RegistrationController extends Controller
 
         $registration->update(['status' => 'pending']);
 
+        Notify::user(
+            $registration->user,
+            'Pembatalan ditolak',
+            'Pengajuan pembatalanmu ditolak, pendaftaranmu tetap diproses.',
+            route('candidate.dashboard')
+        );
+
         return back()->with('success', 'Pengajuan pembatalan ditolak, pendaftaran tetap pending.');
     }
 
@@ -110,6 +139,13 @@ class RegistrationController extends Controller
         }
 
         $registration->update(['status' => 'training']);
+
+        Notify::user(
+            $registration->user,
+            'Mulai diklat',
+            'Statusmu sekarang Mengikuti Diklat.',
+            route('candidate.dashboard')
+        );
 
         return back()->with('success', 'Status diubah menjadi Mengikuti Diklat.');
     }

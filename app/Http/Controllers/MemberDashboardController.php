@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Agenda;
+use App\Models\MemberUnit;
 use App\Models\Period;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Auth;
@@ -25,18 +26,35 @@ class MemberDashboardController extends Controller
             $myPeriod = Period::where('angkatan', $member->generation)->first();
         }
 
+        // Unit yang sudah disetujui untuk member ini — dipakai buat nyaring agenda
+        // bertipe "unit" supaya cuma muncul kalau member memang tergabung di unit itu
+        // (sama seperti logika di AgendaController untuk halaman Agenda).
+        $myUnitIds = MemberUnit::where('member_id', $member->id)
+            ->where('status', 'approved')
+            ->pluck('unit_id')
+            ->toArray();
+
         $attendanceRate = 0;
         $totalAgendas = 0;
 
         if ($myPeriod) {
             $totalAgendas = Agenda::where('period_id', $myPeriod->id)
                 ->whereIn('target_role', ['all', 'member'])
+                ->where(function ($q) use ($myUnitIds) {
+                    $q->where('type', '!=', 'unit')
+                      ->orWhereIn('unit_id', $myUnitIds);
+                })
                 ->count();
 
             if ($totalAgendas > 0) {
                 $attended = Attendance::where('member_id', $member->id)
-                    ->whereHas('agenda', function ($q) use ($myPeriod) {
-                        $q->where('period_id', $myPeriod->id)->whereIn('target_role', ['all', 'member']);
+                    ->whereHas('agenda', function ($q) use ($myPeriod, $myUnitIds) {
+                        $q->where('period_id', $myPeriod->id)
+                          ->whereIn('target_role', ['all', 'member'])
+                          ->where(function ($qq) use ($myUnitIds) {
+                              $qq->where('type', '!=', 'unit')
+                                 ->orWhereIn('unit_id', $myUnitIds);
+                          });
                     })->count();
 
                 $attendanceRate = round(($attended / $totalAgendas) * 100, 1);
@@ -49,6 +67,10 @@ class MemberDashboardController extends Controller
         $relatedAgendas = Agenda::with(['period', 'unit'])
             ->when($myPeriod, fn ($q) => $q->where('period_id', $myPeriod->id))
             ->whereIn('target_role', ['all', 'member'])
+            ->where(function ($q) use ($myUnitIds) {
+                $q->where('type', '!=', 'unit')
+                  ->orWhereIn('unit_id', $myUnitIds);
+            })
             ->orderBy('date')
             ->take(5)
             ->get();

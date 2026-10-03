@@ -24,6 +24,7 @@
                 <th>Kelas</th>
                 <th>Angkatan</th>
                 <th>Status</th>
+                <th>Alasan Keluar</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -47,6 +48,19 @@
                         </span>
                     </td>
                     <td>
+                        @if ($member->exit_reason)
+                            {{ $member->exit_reason }}
+                            @if ($member->exit_requested_at)
+                                <br>
+                                <small class="text-muted">{{ $member->exit_requested_at->format('d/m/Y H:i') }}</small>
+                            @endif
+                        @elseif ($member->membership_status === 'pending_exit')
+                            <span class="text-muted">Tidak tercatat</span>
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
                         @if ($member->membership_status === 'active')
                             <form action="{{ route('admin.members.remove', $member) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin keluarkan anggota ini?')">
                                 @csrf
@@ -65,7 +79,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="text-center">Tidak ada data.</td></tr>
+                <tr><td colspan="8" class="text-center">Tidak ada data.</td></tr>
             @endforelse
         </tbody>
     </table>

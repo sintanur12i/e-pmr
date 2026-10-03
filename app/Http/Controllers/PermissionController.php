@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use App\Models\MemberUnit;
 use App\Models\Permission;
 use App\Models\User;
+use App\Support\Notify;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,7 @@ class PermissionController extends Controller
             $proofPath = $request->file('proof')->store('permission-proofs', 'public');
         }
 
-        Permission::create([
+            Permission::create([
             'agenda_id'       => $agenda->id,
             'member_id'       => $user->role === 'member' ? $user->member->id : null,
             'registration_id' => $user->role === 'candidate_member' ? $user->registration->id : null,
@@ -48,6 +49,12 @@ class PermissionController extends Controller
             'proof'           => $proofPath,
             'status'          => 'pending',
         ]);
+
+        Notify::admins(
+            'Izin baru',
+            $user->full_name . ' mengajukan izin untuk agenda "' . $agenda->title . '".',
+            route('admin.permissions.index')
+        );
 
         return redirect()
             ->route('agendas.index')

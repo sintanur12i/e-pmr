@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Coach;
 use App\Models\Material;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 
 class MaterialController extends Controller
@@ -27,17 +28,19 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'title'       => 'required|string|max:100',
-            'file'        => 'required|file|mimes:pdf,doc,docx,ppt,pptx|max:5120',
+            'file' => 'required|file|mimes:pdf|max:5120',
             'date'        => 'required|date',
         ]);
 
         $validated['file'] = $request->file('file')->store('materials', 'public');
 
-        Material::create($validated);
+            Material::create($validated);
 
-        return redirect()
-            ->route('admin.materials.index')
-            ->with('success', 'Materi berhasil ditambahkan.');
+            Notify::target('all', 'Materi baru', $validated['title'], route('materials.index'));
+
+            return redirect()
+                ->route('admin.materials.index')
+                ->with('success', 'Materi berhasil ditambahkan.');
     }
 
     public function edit(Material $material)
@@ -51,7 +54,7 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'title'       => 'required|string|max:100',
-            'file'        => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx|max:5120',
+            'file' => 'nullable|file|mimes:pdf|max:5120',
             'date'        => 'required|date',
         ]);
 

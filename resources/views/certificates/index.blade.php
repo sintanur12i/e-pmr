@@ -15,7 +15,8 @@
                             @if ($cert->unit) — {{ $cert->unit->name }} @endif
                         </p>
                         <p class="card-text small text-muted">Periode: {{ $cert->period->name }}</p>
-                        <a href="{{ Storage::url($cert->file) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat / Unduh</a>
+                        <a href="{{ Storage::url($cert->file) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat</a>
+                        <a href="{{ route('certificates.download', $cert) }}" class="btn btn-sm btn-primary">Unduh</a>
                     </div>
                 </div>
             </div>

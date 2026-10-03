@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Member;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -24,6 +25,13 @@ class MemberController extends Controller
     {
         $member->deactivate();
 
+        Notify::user(
+            $member->user,
+            'Keanggotaan dinonaktifkan',
+            'Kamu telah dikeluarkan dari keanggotaan PMR.',
+            route('profile.show')
+        );
+
         return back()->with('success', 'Anggota berhasil dikeluarkan.');
     }
 
@@ -31,12 +39,30 @@ class MemberController extends Controller
     {
         $member->deactivate();
 
+        Notify::user(
+            $member->user,
+            'Pengajuan keluar disetujui',
+            'Pengajuan keluarmu dari PMR telah disetujui.',
+            route('profile.show')
+        );
+
         return back()->with('success', 'Pengajuan keluar disetujui.');
     }
 
     public function rejectExit(Member $member)
     {
-        $member->update(['membership_status' => 'active']);
+        $member->update([
+            'membership_status' => 'active',
+            'exit_reason'       => null,
+            'exit_requested_at' => null,
+        ]);
+
+        Notify::user(
+            $member->user,
+            'Pengajuan keluar ditolak',
+            'Pengajuan keluarmu ditolak, kamu tetap menjadi anggota aktif.',
+            route('profile.show')
+        );
 
         return back()->with('success', 'Pengajuan keluar ditolak, anggota tetap aktif.');
     }

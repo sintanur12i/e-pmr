@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
+use App\Models\User;
+use App\Support\Notify;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
@@ -28,22 +30,42 @@ class PermissionController extends Controller
     }
 
     public function approve(Permission $permission)
-    {
-        $permission->update([
-            'status'      => 'approved',
-            'approved_by' => auth()->id(),
-        ]);
+{
+    $permission->update([
+        'status'      => 'approved',
+        'approved_by' => auth()->id(),
+    ]);
 
-        return back()->with('success', 'Izin disetujui.');
-    }
+    Notify::user(
+        $this->requester($permission),
+        'Izin disetujui',
+        'Izinmu untuk agenda "' . $permission->agenda->title . '" disetujui.',
+        route('agendas.index')
+    );
 
-    public function reject(Permission $permission)
-    {
-        $permission->update([
-            'status'      => 'rejected',
-            'approved_by' => auth()->id(),
-        ]);
+    return back()->with('success', 'Izin disetujui.');
+}
 
-        return back()->with('success', 'Izin ditolak.');
-    }
+public function reject(Permission $permission)
+{
+    $permission->update([
+        'status'      => 'rejected',
+        'approved_by' => auth()->id(),
+    ]);
+
+    Notify::user(
+        $this->requester($permission),
+        'Izin ditolak',
+        'Izinmu untuk agenda "' . $permission->agenda->title . '" ditolak.',
+        route('agendas.index')
+    );
+
+    return back()->with('success', 'Izin ditolak.');
+}
+
+/** Pengaju izin: member atau calon anggota. */
+private function requester(Permission $permission): ?User
+{
+    return $permission->member?->user ?? $permission->registration?->user;
+}
 }
